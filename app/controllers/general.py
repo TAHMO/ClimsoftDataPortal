@@ -26,7 +26,7 @@ def station_list():
             {
                 'id': variable.elementId,
                 'description': variable.elementName,
-                'shortcode': variable.abbreviation,
+                'shortcode': variable.elementId,
                 'units': variable.units,
                 'standard': True,
                 'elementtype': variable.elementtype
@@ -54,7 +54,7 @@ def station_list():
             'groupRole': 'user'
         },
         'stationAccess': [ station.stationId for station in stations ],
-        'variableAccess': [ variable.abbreviation for variable in variables ]
+        'variableAccess': [ variable.elementId for variable in variables ]
     }
 
     return jsonify(response)

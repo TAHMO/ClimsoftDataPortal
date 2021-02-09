@@ -3,14 +3,14 @@ from app.models.base import Base
 
 class Observation(Base):
     __tablename__ = 'observationfinal'
-    recordedFrom = Column(String)
-    describedBy = Column(Integer)
-    obsDatetime = Column(DateTime)
+    recordedFrom = Column(String, primary_key=True)
+    describedBy = Column(Integer, primary_key=True)
+    obsDatetime = Column(DateTime, primary_key=True)
     obsValue = Column(Float)
     qcStatus = Column(Integer)
 
     def __str__(self):
-        return "{}".format(self.stationName)
+        return "{} {} {}".format(self.obsDatetime, self.recordedFrom, self.describedBy)
 
     def __repr__(self):
-        return "{}: {}".format(self.stationId, self.__str__())
+        return "{}: {}".format(self.__str__(), self.obsValue)

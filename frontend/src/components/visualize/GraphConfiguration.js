@@ -42,9 +42,7 @@ export default class GraphConfiguration extends React.Component {
     };
 
     const availableGraphTypesByVariable = {
-      'pr': ['hourly-bar', 'daily-bar'],
-      'ws': ['windrose'],
-      'default': ['hourly-line', 'daily-line']
+      'default': ['hourly-line']
     };
 
     this.state = {
@@ -156,16 +154,8 @@ export default class GraphConfiguration extends React.Component {
         .then(response => response.data)
         .then(response => {
           if (Array.isArray(response)) {
-            const graphTitle = this.state.variableList.find(v => v.shortcode === this.state.variable)['description'];
-            const units = {
-              'ap': 'kPa',
-              'pr': 'mm',
-              'rh': '-',
-              'ra': 'W/m2',
-              'te': 'deg C',
-              'ws': 'm/s'
-            };
-            const graphUnits = units[this.state.variable];
+            const graphTitle = this.state.variableList.find(v => v.shortcode == this.state.variable)['description'];
+            const graphUnits = this.state.variableList.find(v => v.shortcode == this.state.variable)['units'];
             let graphType = 'scatter';
             if (this.state.type === 'windrose') {
 
