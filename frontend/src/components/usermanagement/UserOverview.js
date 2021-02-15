@@ -38,8 +38,7 @@ export default class UserOverview extends React.Component {
       .then(response => response.data)
       .then(response =>
         this.setState({
-          userList: response.users.filter(user => user.access),
-          demoList: response.users.filter(user => !user.access)
+          userList: response.users
         })
       );
   }
@@ -71,16 +70,10 @@ export default class UserOverview extends React.Component {
                 <thead className="bg-light">
                 <tr>
                   <th scope="col" className="border-0">
-                    Name
-                  </th>
-                  <th scope="col" className="border-0" style={{"width": "30%"}}>
-                    Organisation
+                    Username
                   </th>
                   <th scope="col" className="border-0">
                     E-mail
-                  </th>
-                  <th scope="col" className="border-0">
-                    Created
                   </th>
                   <th scope="col" className="border-0">
                     Last active
@@ -91,7 +84,7 @@ export default class UserOverview extends React.Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.userList.filter(e => (_.isEmpty(this.state.filterUserType) || e.userType === this.state.filterUserType)).map((user) => {
+                {this.state.userList.map((user) => {
                   return (
                     <tr>
                       <td>
@@ -100,13 +93,7 @@ export default class UserOverview extends React.Component {
                         <span>&nbsp;<i className="material-icons">grade</i></span>
                         }
                       </td>
-                      <td>{user.profile.company}</td>
                       <td>{user.email}</td>
-                      <td>
-                        {(user.createdAt) &&
-                        <Moment date={user.createdAt} format="YYYY-MM-DD"/>
-                        }
-                      </td>
                       <td>
                         {(user.lastLogin) &&
                         <Moment date={user.lastLogin} format="YYYY-MM-DD"/>

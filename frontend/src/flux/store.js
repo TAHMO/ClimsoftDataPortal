@@ -64,9 +64,6 @@ class Store extends EventEmitter {
     if (!_store.user.role || _store.user.role !== "admin") {
       navItems = navItems.filter(item => !item.adminOnly);
     }
-    if (!_store.user.groupRole || _store.user.groupRole !== "moderator") {
-      navItems = navItems.filter(item => !item.moderatorOnly);
-    }
 
     return navItems;
   }

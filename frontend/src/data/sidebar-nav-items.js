@@ -21,17 +21,6 @@ export default function() {
       htmlBefore: '<i class="material-icons">cloud_download</i>',
       to: "/export",
     },
-    // {
-    //   title: "Access request",
-    //   htmlBefore: '<i class="material-icons">table_chart</i>',
-    //   to: "/access-request",
-    // },
-    {
-      title: "User management",
-      htmlBefore: '<i class="material-icons">supervisor_account</i>',
-      to: "/group-moderator",
-      moderatorOnly: true
-    },
     {
       title: "User management",
       htmlBefore: '<i class="material-icons">account_box</i>',

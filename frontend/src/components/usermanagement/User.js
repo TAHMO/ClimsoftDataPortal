@@ -23,7 +23,6 @@ export default class UserOverview extends React.Component {
 
     this.handleVariableChange = this.handleVariableChange.bind(this);
     this.handleStationChange = this.handleStationChange.bind(this);
-    this.handleAggregationChange = this.handleAggregationChange.bind(this);
 
     this.change = this.change.bind(this);
     this.submit = this.submit.bind(this);
@@ -45,16 +44,12 @@ export default class UserOverview extends React.Component {
       description: '',
       multiSelect: false,
       userId: null,
-      userType: "trial",
       user: null,
       name: "",
       email: "",
-      organisation: "",
       role: "user",
       notify: "welcome",
-      aggregationAccess: "unlimited",
       variableAccess: "standard",
-      periodAccess: "unlimited",
       stationAccess: "unlimited"
     };
   }
@@ -68,10 +63,6 @@ export default class UserOverview extends React.Component {
   submit() {
     let stations = [];
     let variables = [];
-    let aggregations = [];
-    const dateRangeReference = this.dateRangeReference.current;
-    let startDate = null;
-    let endDate = null;
 
     for (const station of Object.keys(this.state.stations)) {
       if (this.state.stations[station]) {
@@ -85,19 +76,6 @@ export default class UserOverview extends React.Component {
       }
     }
 
-    for (const aggregation of Object.keys(this.state.aggregationOptions)) {
-      if (this.state.aggregations[aggregation]) {
-        aggregations.push(aggregation);
-      }
-    }
-
-    if (dateRangeReference && dateRangeReference.state.startDate && dateRangeReference.state.startDate instanceof Date) {
-      startDate = dateRangeReference.state.startDate.getFullYear() + "-" + ("0"+(dateRangeReference.state.startDate.getMonth()+1)).slice(-2) + "-" + ("0" + dateRangeReference.state.startDate.getDate()).slice(-2) + 'T00:00:00.000Z';
-    }
-    if (dateRangeReference && dateRangeReference.state.endDate && dateRangeReference.state.endDate instanceof Date) {
-      endDate = dateRangeReference.state.endDate.getFullYear() + "-" + ("0"+(dateRangeReference.state.endDate.getMonth()+1)).slice(-2) + "-" + ("0" + dateRangeReference.state.endDate.getDate()).slice(-2) + 'T23:59:59.000Z';
-    }
-
     const accessObject = {
       stations: {
         unlimited: (this.state.stationAccess === "unlimited"),
@@ -107,25 +85,13 @@ export default class UserOverview extends React.Component {
         unlimited: (this.state.variableAccess === "unlimited"),
         standard: (this.state.variableAccess === "standard"),
         specific: (this.state.variableAccess === "specific") ? variables : [],
-      },
-      period: {
-        unlimited: (this.state.periodAccess === "unlimited"),
-        startDate: (this.state.periodAccess === "specific" && startDate) ? startDate : null,
-        endDate: (this.state.periodAccess === "specific") ? endDate : endDate,
-      },
-      aggregation: {
-        unlimited: (this.state.aggregationAccess === "unlimited"),
-        specific: (this.state.aggregationAccess === "specific") ? aggregations : [],
-      },
+      }
     };
 
     const user = {
       name: this.state.name,
-      company: this.state.organisation,
       email: this.state.email.trim(),
       role: this.state.role,
-      userType: this.state.userType,
-      notify: this.state.notify,
       access: accessObject
     };
 
@@ -153,7 +119,6 @@ export default class UserOverview extends React.Component {
       });
   }
 
-
   handleVariableChange(e, variable) {
     const newState = { 'variables': this.state.variables };
     newState['variables'][variable] = !this.state['variables'][variable];
@@ -163,12 +128,6 @@ export default class UserOverview extends React.Component {
   handleStationChange(e, stationCode) {
     const newState = { 'stations': this.state.stations };
     newState['stations'][stationCode] = !this.state['stations'][stationCode];
-    this.setState({ ...this.state, ...newState });
-  }
-
-  handleAggregationChange(e, aggregationCode) {
-    const newState = { 'aggregations': this.state.aggregations };
-    newState['aggregations'][aggregationCode] = !this.state['aggregations'][aggregationCode];
     this.setState({ ...this.state, ...newState });
   }
 
@@ -196,29 +155,19 @@ export default class UserOverview extends React.Component {
             this.setState({
               user: response.user,
               name: response.user.profile.name,
-              organisation: response.user.profile.company,
               email: response.user.email,
-              role: response.user.role,
-              userType: (response.user.userType) ? response.user.userType : "trial",
-              notify: ""
+              role: response.user.role
             });
 
             if (response.user.access) {
               const access = response.user.access;
               this.setState({
-                aggregationAccess: (access.aggregation.unlimited) ? "unlimited" : "specific",
                 variableAccess: (access.variables.unlimited) ? "unlimited" : ((access.variables.standard) ? "standard" : "specific"),
-                periodAccess: (access.period.unlimited) ? "unlimited" : "specific",
                 stationAccess: (access.stations.unlimited) ? "unlimited" : "specific",
                 variables: _.zipObject(access.variables.specific, access.variables.specific.map(x => true)),
                 stations: _.zipObject(access.stations.specific, access.stations.specific.map(x => true)),
                 aggregations: _.zipObject(access.aggregation.specific, access.aggregation.specific.map(x => true)),
               });
-
-              if (access.period.unlimited === false && this.dateRangeReference) {
-                // Set dates in datepicker.
-                this.dateRangeReference.current.setDates(access.period.startDate, access.period.endDate);
-              }
             }
           }
         });
@@ -295,18 +244,6 @@ export default class UserOverview extends React.Component {
                   </Col>
                 </Row>
                 <Row className="border-bottom">
-                  <Col sm="3" className="d-flex mb-3 mt-3">
-                    Organisation
-                  </Col>
-                  <Col sm="3" className="d-flex mb-2 mt-2">
-                    <FormInput
-                      placeholder=""
-                      value={this.state.organisation}
-                      onChange={e => this.change("organisation", e.target.value)}
-                    />
-                  </Col>
-                </Row>
-                <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-2 mt-3">
                     Role
                   </Col>
@@ -319,21 +256,6 @@ export default class UserOverview extends React.Component {
                     </InputGroup>
                   </Col>
                 </Row>
-              <Row>
-                <Col sm="3" className="d-flex mb-2 mt-3">
-                  Notify by email
-                </Col>
-                <Col sm="3" className="d-flex mb-2 mt-2">
-                  <InputGroup>
-                    <FormSelect value={this.state.notify} onChange={e => this.change("notify", e.target.value)}>
-                      <option value="">None</option>
-                      <option value="welcome">Welcome</option>
-                      <option value="update">Access update</option>
-                      <option value="migration">Migration</option>
-                    </FormSelect>
-                  </InputGroup>
-                </Col>
-              </Row>
               </CardBody>
             </Card>
           </Col>
@@ -346,37 +268,6 @@ export default class UserOverview extends React.Component {
                 <h6 className="m-0">Access</h6>
               </CardHeader>
               <CardBody className="pt-0">
-                <Row className="border-bottom">
-                  <Col sm="3" className="d-flex mb-2 mt-3">
-                    Data sets / aggregation
-                  </Col>
-                  <Col sm="3" className="d-flex mb-2 mt-2">
-                    <InputGroup>
-                      <FormSelect value={this.state.aggregationAccess}
-                                  onChange={e => this.change("aggregationAccess", e.target.value)}>
-                        <option value="unlimited">All</option>
-                        <option value="specific">Specific</option>
-                      </FormSelect>
-                    </InputGroup>
-                  </Col>
-                </Row>
-                {this.state.aggregationAccess === "specific" &&
-                <Row className="border-bottom">
-                  <Col sm="3" className="d-flex mb-3 mt-3">
-                    Specify data sets
-                  </Col>
-                  <Col sm="4" md="3" className="mb-2 mt-2">
-                    <fieldset>
-                      {Object.keys(this.state.aggregationOptions).map((aggregationKey) => {
-                        return (
-                          <FormCheckbox checked={this.state.aggregations[aggregationKey]}
-                                        onChange={e => this.handleAggregationChange(e, aggregationKey)}>{this.state.aggregationOptions[aggregationKey]}</FormCheckbox>
-                        )
-                      })}
-                    </fieldset>
-                  </Col>
-                </Row>
-                }
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-2 mt-3">
                     Variables
@@ -421,30 +312,6 @@ export default class UserOverview extends React.Component {
                     </fieldset>
                   </Col>
                   }
-                </Row>
-                }
-                <Row className="border-bottom">
-                  <Col sm="3" className="d-flex mb-2 mt-3">
-                    Period
-                  </Col>
-                  <Col sm="3" className="d-flex mb-2 mt-2">
-                    <InputGroup>
-                      <FormSelect value={this.state.periodAccess}
-                                  onChange={e => this.change("periodAccess", e.target.value)}>
-                        <option value="unlimited">All</option>
-                        <option value="specific">Specific</option>
-                      </FormSelect>
-                    </InputGroup>
-                  </Col>
-                </Row>
-                {this.state.periodAccess === "specific" &&
-                <Row className="border-bottom">
-                  <Col sm="3" className="d-flex mb-3 mt-3">
-                    Specify period
-                  </Col>
-                  <Col sm="3" className="d-flex mb-2 mt-2">
-                    <RangeDatePicker ref={this.dateRangeReference}/>
-                  </Col>
                 </Row>
                 }
                 <Row className="border-bottom">

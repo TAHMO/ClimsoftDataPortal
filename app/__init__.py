@@ -1,11 +1,12 @@
 from flask import Flask, send_from_directory
 from app.models import *
-from app.controllers import general_api, graph_api
+from app.controllers import general_api, graph_api, user_api
 import os
 
 app = Flask(__name__, static_folder="../dashboard", template_folder="../dashboard")
 app.register_blueprint(general_api)
 app.register_blueprint(graph_api)
+app.register_blueprint(user_api)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/portal/<path:path>')
