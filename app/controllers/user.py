@@ -16,7 +16,7 @@ def user_list():
                     'name': user.username
                 },
                 'email': user.email,
-                'role': "admin" if user.admin else "user",
+                'role': "admin" if "admin" in (role.name for role in user.roles) else "user",
                 'lastLogin': user.last_login_at
             } for user in users
         ]

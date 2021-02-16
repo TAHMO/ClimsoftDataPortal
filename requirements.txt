@@ -4,3 +4,5 @@ Flask-Security
 pymysql
 jsonschema
 python-dotenv
+email_validator
+bcrypt

@@ -15,6 +15,18 @@ class AccessVariable(Base):
     user_id = Column('user_id', Integer(), ForeignKey('portal_user.id'))
     variable_id = Column('variable_id', BigInteger(), ForeignKey('obselement.elementId'))
 
+class RolesUsers(Base):
+    __tablename__ = 'portal_roles_users'
+    id = Column(Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id'))
+    role_id = Column('role_id', Integer(), ForeignKey('portal_role.id'))
+
+class Role(Base, RoleMixin):
+    __tablename__ = 'portal_role'
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(80), unique=True)
+    description = Column(String(255))
+
 class User(Base, UserMixin):
     __tablename__ = 'portal_user'
     id = Column(Integer, primary_key=True)
@@ -27,11 +39,12 @@ class User(Base, UserMixin):
     current_login_ip = Column(String(100))
     login_count = Column(Integer)
     active = Column(Boolean())
-    admin = Column(Boolean())
     access_stations_all = Column(Boolean())
     access_variables_all = Column(Boolean())
     access_variables_standard = Column(Boolean())
     confirmed_at = Column(DateTime())
+    roles = relationship('Role', secondary='portal_roles_users',
+                         backref=backref('portal_users', lazy='dynamic'))
     access_stations_specific = relationship('AccessStation',
                          backref=backref('portal_users'))
     access_variable_specific = relationship('AccessVariable',
