@@ -21,7 +21,6 @@ export default class ExportTable extends React.Component {
     this.state = {
       exportList: [],
       showNumber: 5,
-      aggregations: Store.getAggregations(),
       expanded: false
     };
   }
@@ -84,9 +83,6 @@ export default class ExportTable extends React.Component {
                       Description
                     </th>
                     <th scope="col" className="border-0">
-                      Aggregation
-                    </th>
-                    <th scope="col" className="border-0">
                       Variables
                     </th>
                     <th scope="col" className="border-0">
@@ -104,7 +100,6 @@ export default class ExportTable extends React.Component {
                       <tr>
                         <td><Moment date={dataExport.createdAt} format="YYYY-MM-DD HH:mm" /></td>
                         <td>{dataExport.description}</td>
-                        <td>{this.state.aggregations[dataExport.aggregation]}</td>
                         <td>
                         {dataExport.variables.length <= 3 &&
                         <span>{dataExport.variables.join(", ")}</span>

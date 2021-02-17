@@ -31,23 +31,19 @@ export default class ExportCreate extends React.Component {
 
     this.updateStations = this.updateStations.bind(this);
     this.updateVariables = this.updateVariables.bind(this);
-    this.updateAccess = this.updateAccess.bind(this);
 
     this.state = {
       show: false,
       startDate: '',
       endDate: '',
-      aggregation: null,
-      variables: { 'ap': true, 'pr': true, 'rh': true, 'ra': true, 'te': true, 'wd': true, 'wg': true, 'ws': true },
+      variables: {},
       variableList: [],
       stations: {},
       stationList: [],
       filterString: '',
       description: '',
       multiSelect: false,
-      aggregations: Store.getAggregations(),
-      aggregationAccess: [],
-      minDate: new Date('2015-01-01'),
+      minDate: new Date('1990-01-01'),
       maxDate: new Date()
     };
   }
@@ -95,7 +91,6 @@ export default class ExportCreate extends React.Component {
     const dateRangeReference = this.dateRangeReference.current;
 
     let exportConfig = {
-      'aggregation': this.state.aggregation,
       'variables': [],
       'stations': [],
       'startDate': null,
@@ -175,31 +170,14 @@ export default class ExportCreate extends React.Component {
     this.setState({ 'variableList': variableList });
   }
 
-  updateAccess() {
-    const aggregationAccess = Store.getAccessAggregations();
-    if(this.state.aggregation === null && aggregationAccess.length > 0) {
-      this.setState({ 'aggregation': aggregationAccess[0] });
-    }
-    const user = Store.getUser();
-    if(_.has(user, 'access.period.unlimited') && user.access.period.unlimited !== true) {
-      this.setState({ 'minDate': new Date(user.access.period.startDate), 'maxDate': (new Date() > new Date(user.access.period.endDate)) ? new Date(user.access.period.endDate) : new Date() });
-      if (this.dateRangeReference.current) {
-        this.dateRangeReference.current.changeLimit(this.state.minDate, this.state.maxDate);
-      }
-    }
-    this.setState({ 'aggregationAccess': aggregationAccess });
-  }
-
   componentWillMount() {
     Store.on(Constants.EVENT_STATIONS_READY, this.updateStations);
     Store.on(Constants.EVENT_VARIABLES_READY, this.updateVariables);
-    Store.on(Constants.EVENT_USER_READY, this.updateAccess);
   }
 
   componentWillUnmount() {
     Store.removeListener(Constants.EVENT_STATIONS_READY, this.updateStations);
     Store.removeListener(Constants.EVENT_VARIABLES_READY, this.updateVariables);
-    Store.removeListener(Constants.EVENT_USER_READY, this.updateAccess);
   }
 
   componentDidMount() {
@@ -236,25 +214,6 @@ export default class ExportCreate extends React.Component {
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <RangeDatePicker ref={this.dateRangeReference} minDate={this.state.minDate} maxDate={this.state.maxDate} />
-                  </Col>
-                </Row>
-                <Row className="border-bottom">
-                  <Col sm="3" className="d-flex mb-2 mt-3">
-                    Data type
-                  </Col>
-                  <Col sm="3" className="d-flex mb-2 mt-2">
-                    <InputGroup>
-                      <InputGroupAddon type="prepend">
-                        <InputGroupText>Aggregation</InputGroupText>
-                      </InputGroupAddon>
-                      <FormSelect onChange={e => this.change("aggregation", e.target.value)}>
-                        {this.state.aggregationAccess.map((aggregationKey) => {
-                          return (
-                            <option value={aggregationKey}>{this.state.aggregations[aggregationKey]}</option>
-                          )
-                        })}
-                      </FormSelect>
-                    </InputGroup>
                   </Col>
                 </Row>
                 <Row className="border-bottom">
