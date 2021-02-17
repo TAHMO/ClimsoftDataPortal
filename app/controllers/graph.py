@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_security import login_required
 from app.models import db
 from app.models.observation import Observation
 from datetime import datetime, timedelta
@@ -6,6 +7,7 @@ from datetime import datetime, timedelta
 graph_api = Blueprint('graph_api', __name__)
 
 @graph_api.route("/graph", methods=['POST'])
+@login_required
 def graph():
     content = request.get_json(silent=True)
 

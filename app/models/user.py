@@ -6,20 +6,20 @@ from flask_security import UserMixin, RoleMixin
 class AccessStation(Base):
     __tablename__ = 'portal_access_station'
     id = Column(Integer(), primary_key=True)
-    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id'))
-    station_id = Column('station_id', String(255), ForeignKey('station.stationId'))
+    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id', ondelete="CASCADE"))
+    station_id = Column('station_id', String(255), ForeignKey('station.stationId', ondelete="CASCADE"))
 
 class AccessVariable(Base):
     __tablename__ = 'portal_access_variable'
     id = Column(Integer(), primary_key=True)
-    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id'))
-    variable_id = Column('variable_id', BigInteger(), ForeignKey('obselement.elementId'))
+    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id', ondelete="CASCADE"))
+    variable_id = Column('variable_id', BigInteger(), ForeignKey('obselement.elementId', ondelete="CASCADE"))
 
 class RolesUsers(Base):
     __tablename__ = 'portal_roles_users'
     id = Column(Integer(), primary_key=True)
-    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id'))
-    role_id = Column('role_id', Integer(), ForeignKey('portal_role.id'))
+    user_id = Column('user_id', Integer(), ForeignKey('portal_user.id', ondelete="CASCADE"))
+    role_id = Column('role_id', Integer(), ForeignKey('portal_role.id', ondelete="CASCADE"))
 
 class Role(Base, RoleMixin):
     __tablename__ = 'portal_role'
@@ -45,7 +45,5 @@ class User(Base, UserMixin):
     confirmed_at = Column(DateTime())
     roles = relationship('Role', secondary='portal_roles_users',
                          backref=backref('portal_users', lazy='dynamic'))
-    access_stations_specific = relationship('AccessStation',
-                         backref=backref('portal_users'))
-    access_variable_specific = relationship('AccessVariable',
-                         backref=backref('portal_users'))
+    access_stations_specific = relationship('AccessStation', cascade="all, delete-orphan")
+    access_variable_specific = relationship('AccessVariable', cascade="all, delete-orphan")

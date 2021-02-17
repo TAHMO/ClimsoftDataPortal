@@ -33,9 +33,7 @@ export default class UserOverview extends React.Component {
     this.state = {
       submitLabel: "Create user",
       redirect: false,
-      variables: { 'ap': true, 'pr': true, 'rh': true, 'ra': true, 'te': true, 'wd': true, 'wg': true, 'ws': true },
-      aggregationOptions: Store.getAggregations(),
-      aggregations: {},
+      variables: {},
       variableList: [],
       stations: {},
       stationList: [],
@@ -165,8 +163,7 @@ export default class UserOverview extends React.Component {
                 variableAccess: (access.variables.unlimited) ? "unlimited" : ((access.variables.standard) ? "standard" : "specific"),
                 stationAccess: (access.stations.unlimited) ? "unlimited" : "specific",
                 variables: _.zipObject(access.variables.specific, access.variables.specific.map(x => true)),
-                stations: _.zipObject(access.stations.specific, access.stations.specific.map(x => true)),
-                aggregations: _.zipObject(access.aggregation.specific, access.aggregation.specific.map(x => true)),
+                stations: _.zipObject(access.stations.specific, access.stations.specific.map(x => true))
               });
             }
           }
@@ -243,7 +240,7 @@ export default class UserOverview extends React.Component {
                     />
                   </Col>
                 </Row>
-                <Row className="border-bottom">
+                <Row>
                   <Col sm="3" className="d-flex mb-2 mt-3">
                     Role
                   </Col>
@@ -314,7 +311,7 @@ export default class UserOverview extends React.Component {
                   }
                 </Row>
                 }
-                <Row className="border-bottom">
+                <Row>
                   <Col sm="3" className="d-flex mb-2 mt-3">
                     Stations
                   </Col>
@@ -323,7 +320,7 @@ export default class UserOverview extends React.Component {
                       <FormSelect value={this.state.stationAccess}
                                   onChange={e => this.change("stationAccess", e.target.value)}>
                         <option value="unlimited">All</option>
-                        <option value="stations">Choose individual stations</option>
+                        <option value="specific">Choose individual stations</option>
                       </FormSelect>
                     </InputGroup>
                   </Col>
