@@ -152,4 +152,4 @@ def edit_user(id):
 @user_api.errorhandler(ValidationError)
 @user_api.errorhandler(ValueError)
 def handle(e):
-    return jsonify({"error": "Invalid input for user", "message": str(e)}), 400
+    return jsonify({"status": "error", "error": "Invalid input for user", "message": str(e)}), 400

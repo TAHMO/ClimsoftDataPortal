@@ -111,8 +111,9 @@ export default class ExportCreate extends React.Component {
         exportConfig.stations.push(station);
       }
     }
+
     for (const variable of Object.keys(this.state.variables)) {
-      if (this.state.variables[variable] && this.state.variableList.find(element => element.shortcode === variable)) {
+      if (this.state.variables[variable] && this.state.variableList.find(element => element.shortcode == variable)) {
         exportConfig.variables.push(variable);
       }
     }

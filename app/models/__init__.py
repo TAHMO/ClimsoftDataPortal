@@ -11,6 +11,7 @@ engine = create_engine('mysql+pymysql://{0}'.format(os.environ.get("DATABASE_URI
 from app.models import station
 from app.models import variable
 from app.models import user
+from app.models import export
 
 Base.metadata.create_all(engine)
 DBSession = sessionmaker(bind=engine)

@@ -12,6 +12,23 @@ def station_list():
     stations = db.query(Station).order_by(Station.stationId.asc()).all()
     variables = db.query(Variable).filter(Variable.elementtype.like("%AWS%") | Variable.elementtype.like("%hourly%")).order_by(Variable.elementName.asc()).all()
 
+    standard_variables = [
+        881,    # Temp
+        884,    # Pressure
+        893,    # RH
+        892,    # Precipitation
+        895,    # Wind direction
+        879     # Wind speed
+    ]
+
+    other_variables = [
+        886,    # Gust speed
+        894,    # Solar rad
+        891,    # MSL pressure
+        916,    # Vapour pressure
+        915,    # Soil moisture
+    ]
+
     response = {
         'stations': [
             {
@@ -30,9 +47,9 @@ def station_list():
                 'description': variable.elementName,
                 'shortcode': variable.elementId,
                 'units': variable.units,
-                'standard': True,
+                'standard': variable.elementId in standard_variables,
                 'elementtype': variable.elementtype
-            } for variable in variables
+            } for variable in list(filter(lambda v: v.elementId in standard_variables or v.elementId in other_variables, variables))
         ],
         'user': {
             '_id': current_user.id,
