@@ -44,6 +44,7 @@ export default class UserOverview extends React.Component {
       userId: null,
       user: null,
       name: "",
+      password: "",
       email: "",
       role: "user",
       notify: "welcome",
@@ -89,6 +90,7 @@ export default class UserOverview extends React.Component {
     const user = {
       name: this.state.name,
       email: this.state.email.trim(),
+      password: this.state.password.trim(),
       role: this.state.role,
       access: accessObject
     };
@@ -237,6 +239,18 @@ export default class UserOverview extends React.Component {
                       placeholder=""
                       value={this.state.email}
                       onChange={e => this.change("email", e.target.value)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="border-bottom">
+                  <Col sm="3" className="d-flex mb-3 mt-3">
+                    Password
+                  </Col>
+                  <Col sm="3" className="d-flex mb-2 mt-2">
+                    <FormInput
+                      placeholder=""
+                      value={this.state.password}
+                      onChange={e => this.change("password", e.target.value)}
                     />
                   </Col>
                 </Row>

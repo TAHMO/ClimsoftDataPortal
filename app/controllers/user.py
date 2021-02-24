@@ -11,6 +11,7 @@ user_schema = {
     "properties": {
         "email": {"type": "string"},
         "name": {"type": "string"},
+        "password": {"type": "string"},
         "role": {"type": "string"},
         "access": {
             "type": "object",
@@ -64,7 +65,7 @@ def create_user():
     content = request.get_json(silent=True)
     validate(instance=content, schema=user_schema)
 
-    user = user_datastore.create_user(username=content["name"], email=content["email"],password=utils.hash_password("test"), roles=(["admin"] if content["role"] == "admin" else []), access_stations_all=(content['access']['stations']['unlimited'] == True), access_variables_all=(content['access']['variables']['unlimited'] == True), access_variables_standard=(content['access']['variables']['standard'] == True))
+    user = user_datastore.create_user(username=content["name"], email=content["email"],password=utils.hash_password(content["password"]), roles=(["admin"] if content["role"] == "admin" else []), access_stations_all=(content['access']['stations']['unlimited'] == True), access_variables_all=(content['access']['variables']['unlimited'] == True), access_variables_standard=(content['access']['variables']['standard'] == True))
 
     # Variable and station access config.
     user.access_stations_all = (content['access']['stations']['unlimited'] == True)
@@ -125,6 +126,9 @@ def edit_user(id):
 
     user.email = content["email"]
     user.username = content["name"]
+
+    if content["password"] and len(content["password"]):
+        user.password = utils.hash_password(content["password"])
 
     if content["role"] == "admin":
         user_datastore.add_role_to_user(user.email, "admin")

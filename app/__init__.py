@@ -30,3 +30,7 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.template_folder, 'index.html')
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.expire_all()
