@@ -5,7 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from flask_security import SQLAlchemySessionUserDatastore
 from app.models.base import Base
 from app.models.user import User, Role
+from dotenv import load_dotenv
 
+load_dotenv()
 engine = create_engine('mysql+pymysql://{0}'.format(os.environ.get("DATABASE_URI")))
 
 from app.models import station
