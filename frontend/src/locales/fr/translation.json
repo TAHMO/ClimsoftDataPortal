@@ -1,0 +1,81 @@
+{
+  "menu": {
+    "map": "Carte",
+    "visualize": "Graphiques",
+    "export": "Exporter données",
+    "users": "Gestion des Utilisateurs",
+    "logout": "Deconnecter"
+  },
+  "common": {
+    "variable": "Variable",
+    "standard_variables": "Variables Standards",
+    "other_variables": "Autres Variables",
+    "period": "Période",
+    "period_week": "Semaine dernière",
+    "period_month": "Mois dernier",
+    "period_custom": "Sélectionner période",
+    "data_type": "Type de Données",
+    "aggregation": "Agrégation",
+    "aggregation_5min": "Pas d'agrégation",
+    "aggregation_hourly": "Horaire",
+    "aggregation_daily": "Journalière",
+    "aggregation_monthly": "Mensuelle",
+    "start_date": "Date début",
+    "end_date": " Date fin",
+    "description": "Description",
+    "stations": "Stations",
+    "filter": "Filtre",
+    "filter_all": "Tout",
+    "filter_description": "par exemple, l'identifiant de la station ou le nom de la station",
+    "station_id": "Identifiant de la Station",
+    "location_name": "Nom du site",
+    "country": "Pays",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "action_edit": "Modifier",
+    "specify_variables": "Spécifier les variables",
+    "choose_stations": "Choisissez des stations individuelles"
+  },
+  "map": {
+
+  },
+  "visualize": {
+    "settings_page_title": "Configurer le graphique",
+    "settings_block_title": "Paramètres Graphiques",
+    "create_button": "Créer un graphique",
+    "back_button": "Retour à la Configuration Graphique",
+    "show_page_title": "Graphique",
+    "loading_text": "Chargement des données graphique, patientez s'il vous plaît."
+  },
+  "export": {
+    "history_page_title": "Exporter des données",
+    "history_block_title": "Exporter historique",
+    "history_created_at": "Créer à",
+    "history_status": "Statut",
+    "history_download": "Télécharger",
+    "settings_page_title": "Créer une exportation",
+    "settings_block_title": "Paramètres d'exportation",
+    "create_button": "Créer une Exportation"
+  },
+  "user_management": {
+    "page_title": "Gestion des Utilisateurs",
+    "table_title": "Liste des Utilisateurs",
+    "table_username": "Nom Utilisateur",
+    "table_email": "Email",
+    "table_last_active": "Dernière activité",
+    "create_title": "Utilisateur",
+    "create_subtitle": "Créer Utilisateur",
+    "edit_title": "Utilisateur",
+    "edit_subtitle": "Modifier utilisateur",
+    "general_block_title": "Général",
+    "user_name": "Nom",
+    "user_email": "Email",
+    "user_password": "Mot de passe",
+    "user_role": "Rôle",
+    "user_role_normal": "Utilisateur",
+    "user_role_admin": "Administrateur",
+    "access_block_title": "Accès",
+    "access_variables_standard": "Standard",
+    "access_variables_specific": "Spécifique"
+  }
+}

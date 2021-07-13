@@ -1,0 +1,81 @@
+{
+  "menu": {
+    "map": "Map",
+    "visualize": "Graphs",
+    "export": "Data export",
+    "users": "User management",
+    "logout": "Logout"
+  },
+  "common": {
+    "variable": "Variable",
+    "standard_variables": "Standard variables",
+    "other_variables": "Other variables",
+    "period": "Period",
+    "period_week": "Last week",
+    "period_month": "Last month",
+    "period_custom": "Custom period",
+    "data_type": "Data type",
+    "aggregation": "Aggretation",
+    "aggregation_5min": "No aggregation",
+    "aggregation_hourly": "Hourly",
+    "aggregation_daily": "Daily",
+    "aggregation_monthly": "Monthly",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "description": "Description",
+    "stations": "Stations",
+    "filter": "Filter",
+    "filter_all": "All",
+    "filter_description": "e.g. station id or station name",
+    "station_id": "Station id",
+    "location_name": "Location name",
+    "country": "Country",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "action_edit": "Edit",
+    "specify_variables": "Specify variables",
+    "choose_stations": "Choose individual stations"
+  },
+  "map": {
+
+  },
+  "visualize": {
+    "settings_page_title": "Configure graph",
+    "settings_block_title": "Graph settings",
+    "create_button": "Create graph",
+    "back_button": "Back to configure graph",
+    "show_page_title": "Graph",
+    "loading_text": "Loading graph data, please wait."
+  },
+  "export": {
+    "history_page_title": "Data export",
+    "history_block_title": "Export history",
+    "history_created_at": "Created at",
+    "history_status": "Status",
+    "history_download": "Download",
+    "settings_page_title": "Create export",
+    "settings_block_title": "Export settings",
+    "create_button": "Create export"
+  },
+  "user_management": {
+    "page_title": "User management",
+    "table_title": "User list",
+    "table_username": "Username",
+    "table_email": "E-mail",
+    "table_last_active": "Last active",
+    "create_title": "User",
+    "create_subtitle": "Create user",
+    "edit_title": "User",
+    "edit_subtitle": "Edit user",
+    "general_block_title": "General",
+    "user_name": "Name",
+    "user_email": "Email",
+    "user_password": "Password",
+    "user_role": "Role",
+    "user_role_normal": "User",
+    "user_role_admin": "Admin",
+    "access_block_title": "Access",
+    "access_variables_standard": "Standard",
+    "access_variables_specific": "Specific"
+  }
+}
