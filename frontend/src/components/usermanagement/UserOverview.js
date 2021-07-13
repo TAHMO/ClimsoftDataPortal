@@ -12,6 +12,7 @@ import PageTitle from "../common/PageTitle";
 import Moment from "react-moment";
 import Link from "react-router-dom/es/Link";
 import _ from "lodash";
+import i18next from 'i18next';
 
 export default class UserOverview extends React.Component {
   constructor(props) {
@@ -48,11 +49,11 @@ export default class UserOverview extends React.Component {
       <div id="user-overview">
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
-          <PageTitle sm="4" title="User overview" subtitle="" className="text-sm-left" />
+          <PageTitle sm="4" title={i18next.t('user_management.page_title')} subtitle="" className="text-sm-left" />
         </Row>
         <Link to="/add-user">
           <Button theme="primary" className="mb-4 mr-1">
-            Create user
+            {i18next.t('user_management.create_subtitle')}
           </Button>
         </Link>
 
@@ -62,7 +63,7 @@ export default class UserOverview extends React.Component {
           <Card small className="mb-4">
             <CardHeader className="border-bottom">
               <h6 className="m-0">
-                User list ({this.state.userList.length})
+                {i18next.t('user_management.table_title')} ({this.state.userList.length})
               </h6>
             </CardHeader>
             <CardBody className="p-0 pb-3">
@@ -70,16 +71,16 @@ export default class UserOverview extends React.Component {
                 <thead className="bg-light">
                 <tr>
                   <th scope="col" className="border-0">
-                    Username
+                    {i18next.t('user_management.table_username')}
                   </th>
                   <th scope="col" className="border-0">
-                    E-mail
+                    {i18next.t('user_management.table_email')}
                   </th>
                   <th scope="col" className="border-0">
-                    Last active
+                    {i18next.t('user_management.table_last_active')}
                   </th>
                   <th scope="col" className="border-0">
-                    Action
+                    {i18next.t('common.actions')}
                   </th>
                 </tr>
                 </thead>
@@ -99,7 +100,7 @@ export default class UserOverview extends React.Component {
                         <Moment date={user.lastLogin} format="YYYY-MM-DD"/>
                         }
                       </td>
-                      <td><Link to={"/edit-user/" + user._id}>Edit</Link></td>
+                      <td><Link to={"/edit-user/" + user._id}>{i18next.t('common.action_edit')}</Link></td>
                     </tr>
                   )
                 })}
