@@ -32,6 +32,7 @@
     "country": "Pays",
     "latitude": "Latitude",
     "longitude": "Longitude",
+    "actions": "Action",
     "action_edit": "Modifier",
     "specify_variables": "Spécifier les variables",
     "choose_stations": "Choisissez des stations individuelles"
