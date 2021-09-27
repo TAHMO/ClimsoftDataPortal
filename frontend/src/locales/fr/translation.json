@@ -39,7 +39,8 @@
     "only_selected": "Afficher sélectionnés",
     "disabled": "Désactivé",
     "enabled": "Actif",
-    "show_all": "montrer tout"
+    "show_all": "montrer tout",
+    "specify_period": "Préciser la période"
   },
   "map": {
 

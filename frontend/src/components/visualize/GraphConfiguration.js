@@ -17,6 +17,7 @@ import PageTitle from "../common/PageTitle";
 import RangeDatePicker from "../common/RangeDatePicker";
 import axios from "axios";
 import Plot from 'react-plotly.js';
+import i18next from 'i18next';
 
 export default class GraphConfiguration extends React.Component {
   constructor(props) {
@@ -239,14 +240,14 @@ export default class GraphConfiguration extends React.Component {
         {this.state.showGraph === false &&
         <div>
           <Row noGutters className="page-header py-4">
-            <PageTitle sm="4" title="Configure graph" subtitle="" className="text-sm-left"/>
+            <PageTitle sm="4" title={i18next.t('visualize.settings_page_title')} subtitle="" className="text-sm-left"/>
           </Row>
           <div>
             <Row>
               <Col>
                 <Card small className="mb-4">
                   <CardHeader className="border-bottom">
-                    <h6 className="m-0">Graph settings</h6>
+                    <h6 className="m-0">{i18next.t('visualize.settings_block_title')}</h6>
                   </CardHeader>
                   <CardBody className="pt-0">
                     <Row className="border-bottom">
@@ -256,7 +257,7 @@ export default class GraphConfiguration extends React.Component {
                       <Col sm="3" className="d-flex mb-2 mt-2">
                         <InputGroup>
                           <InputGroupAddon type="prepend">
-                            <InputGroupText>Variable</InputGroupText>
+                            <InputGroupText>{i18next.t('common.variable')}</InputGroupText>
                           </InputGroupAddon>
                           <FormSelect onChange={e => this.changeVariable(e.target.value)}>
                             {this.state.variableList.filter((variable) => this.state.hideVariables.indexOf(variable.shortcode) === -1).map((variable) => {
@@ -270,7 +271,7 @@ export default class GraphConfiguration extends React.Component {
                     </Row>
                     <Row className="border-bottom">
                       <Col sm="3" className="d-flex mb-2 mt-3">
-                        Graph
+                        {i18next.t('visualize.show_page_title')}
                       </Col>
                       <Col sm="3" className="d-flex mb-2 mt-2">
                         <InputGroup>
@@ -289,17 +290,17 @@ export default class GraphConfiguration extends React.Component {
                     </Row>
                     <Row className={`${this.state.period === "custom" ? "border-bottom" : ""}`}>
                       <Col sm="3" className="d-flex mb-2 mt-3">
-                        Period
+                        {i18next.t('common.period')}
                       </Col>
                       <Col sm="3" className="d-flex mb-2 mt-2">
                         <InputGroup>
                           <InputGroupAddon type="prepend">
-                            <InputGroupText>Period</InputGroupText>
+                            <InputGroupText>{i18next.t('common.period')}</InputGroupText>
                           </InputGroupAddon>
                           <FormSelect onChange={e => this.change("period", e.target.value)}>
-                            <option value="week">Last week</option>
-                            <option value="month">Last month</option>
-                            <option value="custom">Custom period</option>
+                            <option value="week">{i18next.t('common.period_week')}</option>
+                            <option value="month">{i18next.t('common.period_month')}</option>
+                            <option value="custom">{i18next.t('common.period_custom')}</option>
                           </FormSelect>
                         </InputGroup>
                       </Col>
@@ -307,7 +308,7 @@ export default class GraphConfiguration extends React.Component {
                     {this.state.period === "custom" &&
                     <Row>
                       <Col sm="3" className="d-flex mb-3 mt-3">
-                        Specify period
+                        {i18next.t('common.specify_period')}
                       </Col>
                       <Col sm="3" className="d-flex mb-2 mt-2">
                         <RangeDatePicker ref={this.dateRangeReference} minDate={this.state.minDate}
@@ -323,17 +324,17 @@ export default class GraphConfiguration extends React.Component {
               <Col>
                 <Card small className="mb-2 scroll-500">
                   <CardHeader className="border-bottom">
-                    <h6 className="m-0">Stations</h6>
+                    <h6 className="m-0">{i18next.t('common.stations')}</h6>
                   </CardHeader>
                   <CardBody className="p-0 pb-3">
                     <Row className="border-bottom">
                       <Col sm="3" className="d-flex mb-2 mt-3 ml-3">
                         <InputGroup className="mb-3">
                           <InputGroupAddon type="prepend">
-                            <InputGroupText>Filter</InputGroupText>
+                            <InputGroupText>{i18next.t('common.filter')}</InputGroupText>
                           </InputGroupAddon>
                           <FormInput onChange={e => this.change("filterString", e.target.value.toLowerCase())}
-                                     placeholder="e.g. station id or station name"/>
+                                     placeholder={i18next.t('common.filter_description')}/>
                         </InputGroup>
                       </Col>
                     </Row>
@@ -342,16 +343,16 @@ export default class GraphConfiguration extends React.Component {
                       <tr>
                         <th scope="col" className="border-0"></th>
                         <th scope="col" className="border-0">
-                          Station id
+                          {i18next.t('common.station_id')}
                         </th>
                         <th scope="col" className="border-0">
-                          Location name
+                          {i18next.t('common.location_name')}
                         </th>
                         <th scope="col" className="border-0">
-                          Latitude
+                          {i18next.t('common.latitude')}
                         </th>
                         <th scope="col" className="border-0">
-                          Longitude
+                          {i18next.t('common.longitude')}
                         </th>
                       </tr>
                       </thead>
@@ -373,7 +374,7 @@ export default class GraphConfiguration extends React.Component {
                   </CardBody>
                 </Card>
                 <Button theme="primary" onClick={this.submit} className="mb-4 mr-1">
-                  Create graph
+                  {i18next.t('visualize.create_button')}
                 </Button>
               </Col>
             </Row>
@@ -383,7 +384,7 @@ export default class GraphConfiguration extends React.Component {
         {this.state.showGraph === true &&
         <div>
           <Row noGutters className="page-header py-4">
-            <PageTitle sm="4" title={`Graph`} subtitle="" className="text-sm-left"/>
+            <PageTitle sm="4" title={i18next.t('visualize.show_page_title')} subtitle="" className="text-sm-left"/>
           </Row>
           <Row>
             <Col>
@@ -408,7 +409,7 @@ export default class GraphConfiguration extends React.Component {
               />
               }
               {this.state.graphData.length === 0 &&
-                <p>Loading graph data, please wait.</p>
+                <p>{i18next.t('visualize.loading_text')}</p>
               }
             </Col>
           </Row>
@@ -416,7 +417,7 @@ export default class GraphConfiguration extends React.Component {
           <Row>
             <Col>
               <Button theme="primary" onClick={this.hideGraph} className="mt-2 mb-2 mr-1">
-                Back to configure graph
+                {i18next.t('visualize.back_button')}
               </Button>
             </Col>
           </Row>

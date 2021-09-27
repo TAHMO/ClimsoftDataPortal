@@ -63,7 +63,7 @@ export default class ExportTable extends React.Component {
             <Card small className="mb-4">
               <CardHeader className="border-bottom">
                 <h6 className="m-0">
-                  Export history
+                  {i18next.t('export.history_block_title')}
                   {(this.state.exportList.length > this.state.showNumber) &&
                     <span>
                     &nbsp;-&nbsp;<a href="#export-history" onClick={this.expandList}>({i18next.t('common.show_all')} {this.state.exportList.length})</a>

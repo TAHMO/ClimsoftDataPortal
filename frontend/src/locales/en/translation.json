@@ -39,7 +39,8 @@
     "only_selected": "Show only selected",
     "disabled": "Disabled",
     "enabled": "Enabled",
-    "show_all": "show all"
+    "show_all": "show all",
+    "specify_period": "Specify period"
   },
   "map": {
 

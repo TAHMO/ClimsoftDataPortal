@@ -3,6 +3,7 @@ import { Nav } from "shards-react";
 
 import SidebarNavItem from "./SidebarNavItem";
 import { Store } from "../../../flux";
+import i18next from 'i18next';
 
 class SidebarNavItems extends React.Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class SidebarNavItems extends React.Component {
           ))}
           <li className="nav-item"><a className="nav-link" aria-current="page" href="/logout">
             <div className="d-inline-block item-icon-wrapper"><i className="material-icons">exit_to_app</i></div>
-            <span>Logout</span></a></li>
+            <span>{i18next.t('menu.logout')}</span></a></li>
         </Nav>
       </div>
     )
