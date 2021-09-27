@@ -35,7 +35,10 @@
     "actions": "Action",
     "action_edit": "Edit",
     "specify_variables": "Specify variables",
-    "choose_stations": "Choose individual stations"
+    "choose_stations": "Choose individual stations",
+    "only_selected": "Show only selected",
+    "disabled": "Disabled",
+    "enabled": "Enabled"
   },
   "map": {
 
@@ -77,6 +80,7 @@
     "user_role_admin": "Admin",
     "access_block_title": "Access",
     "access_variables_standard": "Standard",
-    "access_variables_specific": "Specific"
+    "access_variables_specific": "Specific",
+    "variables_block_title": "Variables"
   }
 }

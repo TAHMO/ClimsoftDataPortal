@@ -26,7 +26,7 @@
     "stations": "Stations",
     "filter": "Filtre",
     "filter_all": "Tout",
-    "filter_description": "par exemple, l'identifiant de la station ou le nom de la station",
+    "filter_description": "par exemple, l'identifiant de la station ou le nom",
     "station_id": "Identifiant de la Station",
     "location_name": "Nom du site",
     "country": "Pays",
@@ -35,7 +35,10 @@
     "actions": "Action",
     "action_edit": "Modifier",
     "specify_variables": "Spécifier les variables",
-    "choose_stations": "Choisissez des stations individuelles"
+    "choose_stations": "Choisissez des stations individuelles",
+    "only_selected": "Afficher sélectionnés",
+    "disabled": "Désactivé",
+    "enabled": "Actif"
   },
   "map": {
 
@@ -77,6 +80,7 @@
     "user_role_admin": "Administrateur",
     "access_block_title": "Accès",
     "access_variables_standard": "Standard",
-    "access_variables_specific": "Spécifique"
+    "access_variables_specific": "Spécifique",
+    "variables_block_title": "Variables"
   }
 }

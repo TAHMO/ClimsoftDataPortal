@@ -14,6 +14,7 @@ import Store from "../../flux/store";
 import Constants from "../../flux/constants";
 import Dispatcher from "../../flux/dispatcher";
 import Redirect from "react-router-dom/es/Redirect";
+import i18next from 'i18next';
 
 export default class UserOverview extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ export default class UserOverview extends React.Component {
     this.updateVariables = this.updateVariables.bind(this);
 
     this.state = {
-      submitLabel: "Create user",
+      submitLabel: i18next.t('user_management.create_subtitle'),
       redirect: false,
       variables: {},
       variableList: [],
@@ -47,7 +48,6 @@ export default class UserOverview extends React.Component {
       password: "",
       email: "",
       role: "user",
-      notify: "welcome",
       variableAccess: "standard",
       stationAccess: "unlimited"
     };
@@ -145,7 +145,7 @@ export default class UserOverview extends React.Component {
 
   componentDidMount() {
     if (this.props.id) {
-      this.setState({userId: this.props.id, submitLabel: "Edit user" });
+      this.setState({userId: this.props.id, submitLabel: i18next.t('user_management.edit_subtitle') });
       axios.get(
         "/users/" + this.props.id
       )
@@ -208,19 +208,19 @@ export default class UserOverview extends React.Component {
       <div id="user-overview">
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
-          <PageTitle sm="4" title="User" subtitle={this.state.submitLabel} className="text-sm-left" />
+          <PageTitle sm="4" title={i18next.t('user_management.create_title')} subtitle={this.state.submitLabel} className="text-sm-left" />
         </Row>
 
         <Row>
           <Col>
             <Card small className="mb-4">
               <CardHeader className="border-bottom">
-                <h6 className="m-0">General</h6>
+                <h6 className="m-0">{i18next.t('user_management.general_block_title')}</h6>
               </CardHeader>
               <CardBody className="pt-0">
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-3 mt-3">
-                    Name
+                    {i18next.t('user_management.user_name')}
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <FormInput
@@ -232,7 +232,7 @@ export default class UserOverview extends React.Component {
                 </Row>
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-3 mt-3">
-                    Email
+                    {i18next.t('user_management.user_email')}
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <FormInput
@@ -244,7 +244,7 @@ export default class UserOverview extends React.Component {
                 </Row>
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-3 mt-3">
-                    Password
+                    {i18next.t('user_management.user_password')}
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <FormInput
@@ -256,13 +256,13 @@ export default class UserOverview extends React.Component {
                 </Row>
                 <Row>
                   <Col sm="3" className="d-flex mb-2 mt-3">
-                    Role
+                    {i18next.t('user_management.user_role')}
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <InputGroup>
                       <FormSelect value={this.state.role} onChange={e => this.change("role", e.target.value)}>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
+                        <option value="user">{i18next.t('user_management.user_role_normal')}</option>
+                        <option value="admin">{i18next.t('user_management.user_role_admin')}</option>
                       </FormSelect>
                     </InputGroup>
                   </Col>
@@ -276,20 +276,20 @@ export default class UserOverview extends React.Component {
           <Col>
             <Card small className="mb-4">
               <CardHeader className="border-bottom">
-                <h6 className="m-0">Access</h6>
+                <h6 className="m-0">{i18next.t('user_management.access_block_title')}</h6>
               </CardHeader>
               <CardBody className="pt-0">
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-2 mt-3">
-                    Variables
+                    {i18next.t('user_management.variables_block_title')}
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <InputGroup>
                       <FormSelect value={this.state.variableAccess}
                                   onChange={e => this.change("variableAccess", e.target.value)}>
-                        <option value="unlimited">All</option>
-                        <option value="standard">Standard</option>
-                        <option value="specific">Specific</option>
+                        <option value="unlimited">{i18next.t('common.filter_all')}</option>
+                        <option value="standard">{i18next.t('user_management.access_variables_standard')}</option>
+                        <option value="specific">{i18next.t('user_management.access_variables_specific')}</option>
                       </FormSelect>
                     </InputGroup>
                   </Col>
@@ -297,10 +297,10 @@ export default class UserOverview extends React.Component {
                 {this.state.variableAccess === "specific" &&
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-3 mt-3">
-                    Specify variables
+                    {i18next.t('common.specify_variables')}
                   </Col>
                   <Col sm="4" md="3" className="mb-2 mt-2">
-                    <strong className="text-muted d-block mb-2">Standard variables</strong>
+                    <strong className="text-muted d-block mb-2">{i18next.t('common.standard_variables')}</strong>
                     <fieldset>
                       {this.state.variableList.filter(variable => variable.standard === true).map((variable) => {
                         return (
@@ -312,7 +312,7 @@ export default class UserOverview extends React.Component {
                   </Col>
                   {this.state.variableList.filter(variable => variable.standard === false).length > 0 &&
                   <Col sm="4" md="3" className="mb-2 mt-2">
-                    <strong className="text-muted d-block mb-2">Other variables</strong>
+                    <strong className="text-muted d-block mb-2">{i18next.t('common.other_variables')}</strong>
                     <fieldset>
                       {this.state.variableList.filter(variable => variable.standard === false).map((variable) => {
                         return (
@@ -327,14 +327,14 @@ export default class UserOverview extends React.Component {
                 }
                 <Row>
                   <Col sm="3" className="d-flex mb-2 mt-3">
-                    Stations
+                    {i18next.t('common.stations')}
                   </Col>
                   <Col sm="3" className="d-flex mb-2 mt-2">
                     <InputGroup>
                       <FormSelect value={this.state.stationAccess}
                                   onChange={e => this.change("stationAccess", e.target.value)}>
-                        <option value="unlimited">All</option>
-                        <option value="specific">Choose individual stations</option>
+                        <option value="unlimited">{i18next.t('common.filter_all')}</option>
+                        <option value="specific">{i18next.t('common.choose_stations')}</option>
                       </FormSelect>
                     </InputGroup>
                   </Col>
@@ -348,27 +348,27 @@ export default class UserOverview extends React.Component {
           <Col>
             <Card small className="mb-2">
               <CardHeader className="border-bottom">
-                <h6 className="m-0">Specify individual stations</h6>
+                <h6 className="m-0">{i18next.t('common.choose_stations')}</h6>
               </CardHeader>
               <CardBody className="p-0 pb-3">
                 <Row className="border-bottom">
                   <Col sm="3" className="d-flex mb-2 mt-3 ml-3">
                     <InputGroup className="mb-3">
                       <InputGroupAddon type="prepend">
-                        <InputGroupText>Filter</InputGroupText>
+                        <InputGroupText>{i18next.t('common.filter')}</InputGroupText>
                       </InputGroupAddon>
                       <FormInput onChange={e => this.change("filterString", e.target.value.toLowerCase())}
-                                 placeholder="e.g. station id or station name"/>
+                                 placeholder={i18next.t('common.filter_description')}/>
                     </InputGroup>
                   </Col>
                   <Col sm="2" className="d-flex mb-2 mt-3">
                     <InputGroup className="mb-3">
                       <InputGroupAddon type="prepend">
-                        <InputGroupText>Show only selected</InputGroupText>
+                        <InputGroupText>{i18next.t('common.only_selected')}</InputGroupText>
                       </InputGroupAddon>
                       <FormSelect onChange={e => this.change("filterSelected", e.target.value)}>
-                        <option value={"disabled"}>Disabled</option>
-                        <option value={"enabled"}>Enabled</option>
+                        <option value={"disabled"}>{i18next.t('common.disabled')}</option>
+                        <option value={"enabled"}>{i18next.t('common.enabled')}</option>
                       </FormSelect>
                     </InputGroup>
                   </Col>
@@ -381,16 +381,16 @@ export default class UserOverview extends React.Component {
                                     onChange={e => this.handleMultiSelectChange(e)}/>
                     </th>
                     <th scope="col" className="border-0">
-                      Station id
+                      {i18next.t('common.station_id')}
                     </th>
                     <th scope="col" className="border-0">
-                      Location name
+                      {i18next.t('common.location_name')}
                     </th>
                     <th scope="col" className="border-0">
-                      Latitude
+                      {i18next.t('common.latitude')}
                     </th>
                     <th scope="col" className="border-0">
-                      Longitude
+                      {i18next.t('common.longitude')}
                     </th>
                   </tr>
                   </thead>
