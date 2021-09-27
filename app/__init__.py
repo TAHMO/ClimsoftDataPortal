@@ -18,7 +18,9 @@ app.config['SECURITY_PASSWORD_SALT'] = 'salt'
 app.config['SQLALCHEMY_POOL_SIZE'] = 20
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 300
 
-# Setup Flask-Security
+# Suppress Flask-Security messages.
+app.config['SECURITY_FLASH_MESSAGES'] = False
+
 security = Security(app, user_datastore)
 
 @app.route('/', defaults={'path': ''})
@@ -33,4 +35,19 @@ def serve(path):
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
+    """
+    Resolve database session issues for the combination of Postgres/Sqlalchemy scoped session/Flask-admin.
+
+    :param exception:
+    """
+    # load all expired attributes for the given instance
     db.expire_all()
+
+@app.teardown_request
+def session_clear(exception=None):
+    """
+    Resolve database session issues for the combination of Postgres/Sqlalchemy to rollback database transactions after an exception is thrown.
+    """
+    db.remove()
+    if exception and db.is_active:
+        db.rollback()
