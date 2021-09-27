@@ -10,7 +10,7 @@ import {
 import axios from 'axios';
 import Moment from 'react-moment';
 import PageTitle from "../common/PageTitle";
-import Store from "../../flux/store";
+import i18next from 'i18next';
 
 export default class ExportTable extends React.Component {
   constructor(props) {
@@ -54,7 +54,7 @@ export default class ExportTable extends React.Component {
       <div id="export-history">
         {/* Page Header */}
         <Row noGutters className="page-header py-4">
-          <PageTitle sm="4" title="Data export" subtitle="" className="text-sm-left" />
+          <PageTitle sm="4" title={i18next.t('export.history_page_title')} subtitle="" className="text-sm-left" />
         </Row>
 
         {/* Default Light Table */}
@@ -66,7 +66,7 @@ export default class ExportTable extends React.Component {
                   Export history
                   {(this.state.exportList.length > this.state.showNumber) &&
                     <span>
-                    &nbsp;-&nbsp;<a href="#export-history" onClick={this.expandList}>(show all {this.state.exportList.length})</a>
+                    &nbsp;-&nbsp;<a href="#export-history" onClick={this.expandList}>({i18next.t('common.show_all')} {this.state.exportList.length})</a>
                     </span>
                   }
                 </h6>
@@ -77,19 +77,19 @@ export default class ExportTable extends React.Component {
                   {(this.state.exportList.length > 0) &&
                   <tr>
                     <th scope="col" className="border-0">
-                      Created at
+                      {i18next.t('export.history_created_at')}
                     </th>
                     <th scope="col" className="border-0">
-                      Description
+                      {i18next.t('common.description')}
                     </th>
                     <th scope="col" className="border-0">
-                      Variables
+                      {i18next.t('export.variables')}
                     </th>
                     <th scope="col" className="border-0">
-                      Stations
+                      {i18next.t('common.stations')}
                     </th>
                     <th scope="col" className="border-0">
-                      Status
+                      {i18next.t('export.history_status')}
                     </th>
                   </tr>
                   }
@@ -117,7 +117,7 @@ export default class ExportTable extends React.Component {
                         }
                         </td>
                         {dataExport.status === "completed" &&
-                        <td><a href={"/download/export/" + dataExport._id}>Download</a></td>
+                        <td><a href={"/download/export/" + dataExport._id}>{i18next.t('export.history_download')}</a></td>
                         }
                         {dataExport.status !== "completed" &&
                         <td>{dataExport.status}</td>
@@ -127,7 +127,7 @@ export default class ExportTable extends React.Component {
                   })}
                   {(this.state.exportList.length === 0) &&
                     <tr>
-                      <td colspan="5">You haven't generated any data exports yet.</td>
+                      <td colspan="5">{i18next.t('export.no_exports')}</td>
                     </tr>
                   }
                   </tbody>

@@ -4,14 +4,13 @@ import {
   Col,
   Card,
   CardHeader,
-  CardBody, Button, InputGroup, InputGroupAddon, InputGroupText, FormInput, FormSelect,
+  CardBody, Button,
 } from "shards-react";
 
 import axios from 'axios';
 import PageTitle from "../common/PageTitle";
 import Moment from "react-moment";
 import Link from "react-router-dom/es/Link";
-import _ from "lodash";
 import i18next from 'i18next';
 
 export default class UserOverview extends React.Component {

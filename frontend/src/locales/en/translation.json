@@ -38,7 +38,8 @@
     "choose_stations": "Choose individual stations",
     "only_selected": "Show only selected",
     "disabled": "Disabled",
-    "enabled": "Enabled"
+    "enabled": "Enabled",
+    "show_all": "show all"
   },
   "map": {
 
@@ -59,7 +60,11 @@
     "history_download": "Download",
     "settings_page_title": "Create export",
     "settings_block_title": "Export settings",
-    "create_button": "Create export"
+    "create_button": "Create export",
+    "variables": "Variables",
+    "no_exports": "You haven't generated any data exports yet.",
+    "click_here": "Click here",
+    "start_new": "to start a new export"
   },
   "user_management": {
     "page_title": "User management",

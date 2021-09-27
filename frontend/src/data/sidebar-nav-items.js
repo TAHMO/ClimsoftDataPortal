@@ -1,28 +1,24 @@
+import i18next from 'i18next';
+
 export default function() {
   return [
-    // {
-    //   title: "Dashboard",
-    //   to: "/dashboard",
-    //   htmlBefore: '<i class="material-icons">edit</i>',
-    //   htmlAfter: ""
-    // },
     {
-      title: "Map",
+      title: i18next.t('menu.map'),
       htmlBefore: '<i class="material-icons">vertical_split</i>',
       to: "/map",
     },
     {
-      title: "Graphs",
+      title: i18next.t('menu.visualize'),
       htmlBefore: '<i class="material-icons">insert_chart</i>',
       to: "/visualize",
     },
     {
-      title: "Data export",
+      title: i18next.t('menu.export'),
       htmlBefore: '<i class="material-icons">cloud_download</i>',
       to: "/export",
     },
     {
-      title: "User management",
+      title: i18next.t('menu.users'),
       htmlBefore: '<i class="material-icons">account_box</i>',
       to: "/user-management",
       adminOnly: true

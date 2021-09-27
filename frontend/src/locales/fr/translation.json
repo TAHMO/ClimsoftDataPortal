@@ -38,7 +38,8 @@
     "choose_stations": "Choisissez des stations individuelles",
     "only_selected": "Afficher sélectionnés",
     "disabled": "Désactivé",
-    "enabled": "Actif"
+    "enabled": "Actif",
+    "show_all": "montrer tout"
   },
   "map": {
 
@@ -59,7 +60,11 @@
     "history_download": "Télécharger",
     "settings_page_title": "Créer une exportation",
     "settings_block_title": "Paramètres d'exportation",
-    "create_button": "Créer une Exportation"
+    "create_button": "Créer une Exportation",
+    "variables": "Variables",
+    "no_exports": "Vous n'avez pas encore généré d'exportations de données.",
+    "click_here": "Cliquez ici",
+    "start_new": "pour commencer une nouvelle exportation"
   },
   "user_management": {
     "page_title": "Gestion des Utilisateurs",
