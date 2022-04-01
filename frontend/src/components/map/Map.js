@@ -7,10 +7,18 @@ import Constants from "../../flux/constants";
 import Dispatcher from "../../flux/dispatcher";
 import L from 'leaflet';
 import _ from "lodash";
-import {Button, Col, Row} from "shards-react";
+import {
+  Button,
+  Col, FormSelect,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Row
+} from "shards-react";
 import PageTitle from "../common/PageTitle";
 import axios from "axios";
 import CircleMarker from "react-leaflet/es/CircleMarker";
+import i18next from 'i18next';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -26,6 +34,7 @@ export default class MapComponent extends React.Component {
 
     this.submit = this.submit.bind(this);
     this.updateStations = this.updateStations.bind(this);
+    this.changeType = this.changeType.bind(this);
 
     this.state = {
       bounds: [
@@ -43,6 +52,12 @@ export default class MapComponent extends React.Component {
     const stationList = Store.getStations();
     const availableCountries = _.uniq(_.map(stationList, function(station){ return station.location.countrycode; }));
     this.setState({ 'stationList': stationList, 'availableCountries': availableCountries });
+  }
+
+  changeType(value) {
+    const newState = {};
+    newState['type'] = value;
+    this.setState(newState);
   }
 
   componentWillMount() {
@@ -65,7 +80,7 @@ export default class MapComponent extends React.Component {
 
     let mapConfig = {
       'variable': "pr",
-      'stations': this.state.stationList.filter(s => s.location.countrycode === "KE" || s.location.countrycode === "UG").map(s => s.code),
+      'stations': [],
       'startDate': null,
       'endDate': null
     };
@@ -80,7 +95,7 @@ export default class MapComponent extends React.Component {
     // }
 
     for (const station of this.state.stationList) {
-      // mapConfig.stations.push(station.id);
+      mapConfig.stations.push(station.id);
     }
 
     if (mapConfig.stations.length == 0) {
@@ -121,7 +136,35 @@ export default class MapComponent extends React.Component {
   render() {
     return (
       <div>
-        <Map bounds={this.state.bounds} style={{height: "calc(100vh)"}} maxZoom={11}>
+        <div style={{marginLeft: "24px"}}>
+          <Row noGutters className="page-header py-4">
+            <PageTitle sm="4" title={`Map configuration`} subtitle="" className="text-sm-left"/>
+          </Row>
+          <Row noGutters>
+            <Col sm="3" className="d-flex mb-2 mt-2">
+              <InputGroup>
+                <InputGroupAddon type="prepend">
+                  <InputGroupText>{i18next.t('common.variable')}</InputGroupText>
+                </InputGroupAddon>
+                <FormSelect onChange={e => this.changeType(e.target.value)}>
+                  <option value={""} >Station locations</option>
+                  <option value={"availability"} >Data availability</option>
+                  <option value={"pressuretrend"}>Pressure trend (24 hour)</option>
+                  <option value={"30dayprecipitation"}>Precipitation cumulative (30 day)</option>
+                  <option value={"7daytempavg"}>Average temperature (7 day)</option>
+                  <option value={"7daytempmin"}>Minimum temperature (7 day)</option>
+                  <option value={"7daytempmax"}>Maximum temperature (7 day)</option>
+                </FormSelect>
+              </InputGroup>
+            </Col>
+            {/*<Col>
+              <Button theme="primary" onClick={this.submit} className="mt-2 mb-2 mr-1">
+                Update map
+              </Button>
+            </Col>*/}
+          </Row>
+        </div>
+        <Map bounds={this.state.bounds} style={{height: "calc(100vh - 126px)"}} maxZoom={11}>
           {/*<TileLayer*/}
             {/*attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'*/}
             {/*url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"*/}

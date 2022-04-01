@@ -1,7 +1,7 @@
 from flask import Flask, send_from_directory
 from flask_security import Security, login_required
 from app.models import db, user_datastore
-from app.controllers import general_api, graph_api, user_api, export_api
+from app.controllers import general_api, graph_api, user_api, export_api, map_api
 import os
 
 app = Flask(__name__, static_folder="../dashboard", template_folder="../dashboard")
@@ -9,6 +9,7 @@ app.register_blueprint(general_api)
 app.register_blueprint(graph_api)
 app.register_blueprint(user_api)
 app.register_blueprint(export_api)
+app.register_blueprint(map_api)
 
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SECURITY_REGISTERABLE'] = False
