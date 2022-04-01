@@ -14,8 +14,8 @@ class RangeDatePicker extends React.Component {
     super(props);
 
     this.state = {
-      startDate: undefined,
-      endDate: undefined,
+      startDate: (props.startDate) ? props.startDate : undefined,
+      endDate: (props.endDate) ? props.endDate : undefined,
       minDate: (props.minDate) ? props.minDate : undefined,
       maxDate: (props.maxDate) ? props.maxDate : undefined
     };

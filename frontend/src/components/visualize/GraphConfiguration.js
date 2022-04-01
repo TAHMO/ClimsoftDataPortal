@@ -25,6 +25,8 @@ export default class GraphConfiguration extends React.Component {
     this.dateRangeReference = React.createRef();
 
     this.handleStationChange = this.handleStationChange.bind(this);
+    this.handleMultiSelectChange = this.handleMultiSelectChange.bind(this);
+
     this.change = this.change.bind(this);
     this.changeVariable = this.changeVariable.bind(this);
     this.submit = this.submit.bind(this);
@@ -61,6 +63,7 @@ export default class GraphConfiguration extends React.Component {
       aggregations: Store.getAggregations(),
       aggregationAccess: [],
       graphTypeLabels: graphTypeLabels,
+      multiSelect: false,
       availableGraphTypesByVariable: availableGraphTypesByVariable,
       minDate: new Date('1970-01-01'),
       maxDate: new Date(),
@@ -75,6 +78,9 @@ export default class GraphConfiguration extends React.Component {
   change(key, value) {
     const newState = {};
     newState[key] = value;
+    if(key == 'filterString') {
+      newState['multiSelect'] = false;
+    }
     this.setState(newState);
   }
 
@@ -90,6 +96,18 @@ export default class GraphConfiguration extends React.Component {
     const newState = { 'stations': this.state.stations };
     newState['stations'][stationCode] = !this.state['stations'][stationCode];
     this.setState(newState);
+  }
+
+  handleMultiSelectChange() {
+    let targetValue = (this.state.multiSelect) ? false : true;
+    let stations = this.state.stations;
+
+    this.state.stationList.filter(e => ((e.location.name.toLowerCase().includes(this.state.filterString) || e.code.toLowerCase().includes(this.state.filterString)))).map((station) => {
+      stations[station.code] = targetValue;
+    });
+
+    const newState = { multiSelect: targetValue, stations: stations };
+    this.setState({ ...this.state, ...newState });
   }
 
   submit() {
@@ -139,6 +157,8 @@ export default class GraphConfiguration extends React.Component {
       if (graphConfig.period === 'custom') {
         graphConfig.startDate = dateRangeReference.state.startDate.getFullYear() + "-" + ("0"+(dateRangeReference.state.startDate.getMonth()+1)).slice(-2) + "-" + ("0" + dateRangeReference.state.startDate.getDate()).slice(-2) + 'T00:00:00.000Z';
         graphConfig.endDate = dateRangeReference.state.endDate.getFullYear() + "-" + ("0"+(dateRangeReference.state.endDate.getMonth()+1)).slice(-2) + "-" + ("0" + dateRangeReference.state.endDate.getDate()).slice(-2) + 'T23:59:59.000Z';
+
+        this.setState({ 'startDate': dateRangeReference.state.startDate, 'endDate': dateRangeReference.state.endDate });
       }
       this.showGraph();
       axios(
@@ -262,7 +282,7 @@ export default class GraphConfiguration extends React.Component {
                           <FormSelect onChange={e => this.changeVariable(e.target.value)}>
                             {this.state.variableList.filter((variable) => this.state.hideVariables.indexOf(variable.shortcode) === -1).map((variable) => {
                               return (
-                                <option value={variable.shortcode}>{variable.description}</option>
+                                <option selected={(this.state.variable == variable.shortcode) ? "selected" : ""} value={variable.shortcode}>{variable.description}</option>
                               )
                             })}
                           </FormSelect>
@@ -281,7 +301,7 @@ export default class GraphConfiguration extends React.Component {
                           <FormSelect onChange={e => this.change("type", e.target.value)}>
                             {((this.state.availableGraphTypesByVariable[this.state.variable]) ? this.state.availableGraphTypesByVariable[this.state.variable] : this.state.availableGraphTypesByVariable['default']).map((graphCode) => {
                               return (
-                                <option value={graphCode}>{this.state.graphTypeLabels[graphCode]}</option>
+                                <option selected={(this.state.type == graphCode) ? "selected" : ""} value={graphCode}>{this.state.graphTypeLabels[graphCode]}</option>
                               )
                             })}
                           </FormSelect>
@@ -298,9 +318,9 @@ export default class GraphConfiguration extends React.Component {
                             <InputGroupText>{i18next.t('common.period')}</InputGroupText>
                           </InputGroupAddon>
                           <FormSelect onChange={e => this.change("period", e.target.value)}>
-                            <option value="week">{i18next.t('common.period_week')}</option>
-                            <option value="month">{i18next.t('common.period_month')}</option>
-                            <option value="custom">{i18next.t('common.period_custom')}</option>
+                            <option selected={(this.state.period == "week") ? "selected" : ""} value="week">{i18next.t('common.period_week')}</option>
+                            <option selected={(this.state.period == "month") ? "selected" : ""} value="month">{i18next.t('common.period_month')}</option>
+                            <option selected={(this.state.period == "custom") ? "selected" : ""} value="custom">{i18next.t('common.period_custom')}</option>
                           </FormSelect>
                         </InputGroup>
                       </Col>
@@ -311,7 +331,7 @@ export default class GraphConfiguration extends React.Component {
                         {i18next.t('common.specify_period')}
                       </Col>
                       <Col sm="3" className="d-flex mb-2 mt-2">
-                        <RangeDatePicker ref={this.dateRangeReference} minDate={this.state.minDate}
+                        <RangeDatePicker startDate={this.state.startDate} endDate={this.state.endDate} ref={this.dateRangeReference} minDate={this.state.minDate}
                                          maxDate={this.state.maxDate}/>
                       </Col>
                     </Row>
@@ -341,7 +361,9 @@ export default class GraphConfiguration extends React.Component {
                     <table className="table mb-0">
                       <thead className="bg-light">
                       <tr>
-                        <th scope="col" className="border-0"></th>
+                        <th scope="col" className="border-0">
+                          <FormCheckbox className="mb-0" checked={this.state.multiSelect} onChange={e => this.handleMultiSelectChange(e)}/>
+                        </th>
                         <th scope="col" className="border-0">
                           {i18next.t('common.station_id')}
                         </th>
