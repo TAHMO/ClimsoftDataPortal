@@ -42,16 +42,19 @@ export default class MapComponent extends React.Component {
         [-26.2891802,52.3832053]
       ],
       stationList: [],
-      availableCountries: [],
       valueList: {},
-      valueActive: false
+      detailsList: {},
+      colorList: {},
+      type: "",
+      activeType: "",
+      valueActive: false,
+      detailsActive: false
     };
   }
 
   updateStations() {
     const stationList = Store.getStations();
-    const availableCountries = _.uniq(_.map(stationList, function(station){ return station.location.countrycode; }));
-    this.setState({ 'stationList': stationList, 'availableCountries': availableCountries });
+    this.setState({ 'stationList': stationList });
   }
 
   changeType(value) {
@@ -76,38 +79,15 @@ export default class MapComponent extends React.Component {
 
   submit() {
     let errors = [];
-    // const dateRangeReference = this.dateRangeReference.current;
 
     let mapConfig = {
-      'variable': "pr",
-      'stations': [],
-      'startDate': null,
-      'endDate': null
+      'type': this.state.type
     };
-
-    // Validation.
-    // Check date range.
-    // if (!dateRangeReference.state.startDate || !dateRangeReference.state.startDate instanceof Date) {
-    //   errors.push('Invalid start date');
-    // }
-    // if (!dateRangeReference.state.endDate || !dateRangeReference.state.endDate instanceof Date) {
-    //   errors.push('Invalid end date');
-    // }
-
-    for (const station of this.state.stationList) {
-      mapConfig.stations.push(station.id);
-    }
-
-    if (mapConfig.stations.length == 0) {
-      errors.push('There are no stations selected.');
-    }
 
     if (errors.length > 0) {
       alert('Map update failed:\n' + errors.join('\n'));
       return false;
     } else {
-      mapConfig.startDate = "2020-12-01T00:00:00Z";
-      mapConfig.endDate = "2020-12-31T23:59:00Z";
       axios(
         {
           url: "/map",
@@ -123,6 +103,16 @@ export default class MapComponent extends React.Component {
         .then(response => {
           if (!response.error) {
             this.setState({ valueList: response, valueActive: true });
+            this.setState(
+              {
+                activeType: response.type,
+                colorList: response.colors,
+                valueList: response.values,
+                detailsList: response.details,
+                valueActive: response.valueActive,
+                detailsActive: response.detailsActive
+              }
+            );
           } else {
             alert('Creating map failed:\n' + response.error);
           }
@@ -151,17 +141,16 @@ export default class MapComponent extends React.Component {
                   <option value={"availability"} >Data availability</option>
                   <option value={"pressuretrend"}>Pressure trend (24 hour)</option>
                   <option value={"30dayprecipitation"}>Precipitation cumulative (30 day)</option>
-                  <option value={"7daytempavg"}>Average temperature (7 day)</option>
                   <option value={"7daytempmin"}>Minimum temperature (7 day)</option>
                   <option value={"7daytempmax"}>Maximum temperature (7 day)</option>
                 </FormSelect>
               </InputGroup>
             </Col>
-            {/*<Col>
+            <Col sm="3" className="d-flex ml-2">
               <Button theme="primary" onClick={this.submit} className="mt-2 mb-2 mr-1">
                 Update map
               </Button>
-            </Col>*/}
+            </Col>
           </Row>
         </div>
         <Map bounds={this.state.bounds} style={{height: "calc(100vh - 126px)"}} maxZoom={11}>
@@ -173,13 +162,28 @@ export default class MapComponent extends React.Component {
             attribution='Tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {!this.state.valueActive && this.state.stationList.map((station) => {
+          {!this.state.valueActive && !this.state.detailsActive && this.state.stationList.map((station) => {
             return (
               <Marker position={[station.location.latitude, station.location.longitude]}>
                 <Popup>
                   <span>{`${station.code} ${station.location.name}`}</span>
                 </Popup>
               </Marker>
+            )
+          })}
+          {this.state.detailsActive && this.state.stationList.map((station) => {
+            let message = ``;
+            const color = (this.state.colorList[station.code]) ? this.state.colorList[station.code] : 'lightgray';
+            if (this.state.activeType == 'availability') {
+              message = (!this.state.detailsList[station.code]) ? 'No data' : `${this.state.detailsList[station.code].min.substring(0,10)} up to ${this.state.detailsList[station.code].max.substring(0,10)}`;
+            }
+
+            return (
+              <CircleMarker center={[station.location.latitude, station.location.longitude]} fillColor={color} color={"black"} weight={1} fillOpacity={1} radius={6}>
+                <Popup>
+                  <span>{`${station.code} ${station.location.name}: ${message}`}</span>
+                </Popup>
+              </CircleMarker>
             )
           })}
           {this.state.valueActive && this.state.stationList.filter(s => this.state.valueList[s.code] !== undefined).map((station) => {

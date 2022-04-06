@@ -43,10 +43,6 @@ class Store extends EventEmitter {
       case Constants.CHECK_INIT:
         this.checkInit();
         break;
-      case Constants.GET_STATIONS:
-        this.retrieveStations();
-        break;
-      default:
     }
   }
 
@@ -100,21 +96,6 @@ class Store extends EventEmitter {
         _store.initInProgress = false;
         _store.initCompleted = true;
       });
-  }
-
-  retrieveStations() {
-    if(_store.stations.length > 0) {
-      this.emit(Constants.EVENT_STATIONS_READY);
-    } else {
-      axios.get(
-        "/services/assets/v2/stations?sort=code"
-      )
-        .then(response => response.data)
-        .then(response => {
-          _store.stations = response.data;
-          this.emit(Constants.EVENT_STATIONS_READY);
-        });
-    }
   }
 
   getStations() {
