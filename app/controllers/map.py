@@ -30,7 +30,14 @@ def map():
                 'max': stationInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ'),
                 'qc': True
             }
-            response['colors'][stationInfo.recordedFrom] = "green"
+
+            timeDiff = datetime.now() - stationInfo.max
+            color = "#008000"
+            if timeDiff > timedelta(days=7):
+                color = "#FF0000"
+            elif timeDiff > timedelta(hours=24):
+                color = "#FFA500"
+            response['colors'][stationInfo.recordedFrom] = color
 
         observationsInitial = ObservationInitial.query.with_entities(ObservationInitial.recordedFrom, func.min(ObservationInitial.obsDatetime).label('min'), func.max(ObservationInitial.obsDatetime).label('max')).group_by(ObservationInitial.recordedFrom).all()
         for obsInitialInfo in list(observationsInitial):
@@ -40,11 +47,11 @@ def map():
                     'max': obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ'),
                     'qc': False
                 }
-                response['colors'][obsInitialInfo.recordedFrom] = "orange"
+                response['colors'][obsInitialInfo.recordedFrom] = "#FF0000"
             elif obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ') > response['details'][obsInitialInfo.recordedFrom]['max']:
                 response['details'][obsInitialInfo.recordedFrom]['max'] = obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ')
                 response['details'][obsInitialInfo.recordedFrom]['qc'] = False
-                response['colors'][obsInitialInfo.recordedFrom] = "orange"
+                response['colors'][obsInitialInfo.recordedFrom] = "#FF0000"
 
     elif content['type'] == "pressuretrend":
         endDate = datetime.now()
