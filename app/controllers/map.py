@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request
 from flask_security import login_required
-from app.models import db
 from app.models.observation import Observation
 from app.models.observationinitial import ObservationInitial
 from datetime import datetime, timedelta
@@ -54,19 +53,47 @@ def map():
                 response['colors'][obsInitialInfo.recordedFrom] = "#FF0000"
 
     elif content['type'] == "pressuretrend":
+        response['valueActive'] = True
         endDate = datetime.now()
-        startDate = endDate - timedelta(hours=24)
+        startDate = endDate - timedelta(hours=124)
+        observationStations = Observation.query.with_entities(Observation.recordedFrom, Observation.obsDatetime, Observation.obsValue)\
+            .filter(Observation.obsDatetime >= startDate).filter((Observation.describedBy == 884) | (Observation.describedBy == 890) | (Observation.describedBy == 891))\
+            .group_by(Observation.recordedFrom).all()
+        for observationStation in list(observationStations):
+            observationStart = Observation.query.with_entities(Observation.recordedFrom, Observation.obsDatetime, Observation.obsValue)\
+                .filter(Observation.obsDatetime >= startDate).filter((Observation.describedBy == 884) | (Observation.describedBy == 890) | (Observation.describedBy == 891))\
+                .filter(Observation.recordedFrom == observationStation.recordedFrom).first()
+
+            observationEnd = Observation.query.with_entities(Observation.recordedFrom, Observation.obsDatetime,Observation.obsValue)\
+                .filter(Observation.obsDatetime >= startDate).filter((Observation.describedBy == 884) | (Observation.describedBy == 890) | (Observation.describedBy == 891))\
+                .filter(Observation.recordedFrom == observationStation.recordedFrom).order_by(Observation.obsDatetime.desc()).first()
+
+            response['values'][observationStation.recordedFrom] = observationEnd.obsValue - observationStart.obsValue
     elif content['type'] == "30dayprecipitation":
+        response['valueActive'] = True
         endDate = datetime.now()
         startDate = endDate - timedelta(days=30)
-
+        observations = Observation.query.with_entities(Observation.recordedFrom, func.sum(Observation.obsValue).label('total'), func.min(Observation.obsDatetime).label('first'), func.max(Observation.obsDatetime).label('last'))\
+            .filter((Observation.describedBy == 892) | (Observation.describedBy == 5)).filter(Observation.obsDatetime >= startDate).group_by(Observation.recordedFrom).all()
+        for observation in list(observations):
+            response['values'][observation.recordedFrom] = observation.total
     elif content['type'] == "7daytempmin":
+        response['valueActive'] = True
         endDate = datetime.now()
         startDate = endDate - timedelta(days=7)
+        observations = Observation.query.with_entities(Observation.recordedFrom, func.min(Observation.obsValue).label('value'))\
+            .filter((Observation.describedBy == 881) | (Observation.describedBy == 3)).filter(Observation.obsDatetime >= startDate).group_by(Observation.recordedFrom).all()
+        for observation in list(observations):
+            response['values'][observation.recordedFrom] = observation.value
     elif content['type'] == "7daytempmax":
+        response['valueActive'] = True
         endDate = datetime.now()
         startDate = endDate - timedelta(days=7)
-    else:
+        observations = Observation.query.with_entities(Observation.recordedFrom, func.max(Observation.obsValue).label('value'))\
+            .filter((Observation.describedBy == 881) | (Observation.describedBy == 2)).filter(Observation.obsDatetime >= startDate).group_by(Observation.recordedFrom).all()
+        for observation in list(observations):
+            response['values'][observation.recordedFrom] = observation.value
+    elif content['type']:
         response['error'] = 'Invalid type'
 
     return jsonify(response)

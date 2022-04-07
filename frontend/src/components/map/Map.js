@@ -153,7 +153,7 @@ export default class MapComponent extends React.Component {
             </Col>
           </Row>
         </div>
-        <Map bounds={this.state.bounds} style={{height: "calc(100vh - 126px)"}} maxZoom={11}>
+        <Map bounds={this.state.bounds} style={{height: "calc(100vh - 126px)"}} maxZoom={12}>
           {/*<TileLayer*/}
             {/*attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'*/}
             {/*url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"*/}
@@ -175,13 +175,20 @@ export default class MapComponent extends React.Component {
             let message = ``;
             const color = (this.state.colorList[station.code]) ? this.state.colorList[station.code] : 'lightgray';
             if (this.state.activeType == 'availability') {
-              message = (!this.state.detailsList[station.code]) ? 'No data' : `${this.state.detailsList[station.code].min.substring(0,10)} up to ${this.state.detailsList[station.code].max.substring(0,10)}`;
+              message = (!this.state.detailsList[station.code]) ? 'No data' : `${this.state.detailsList[station.code].min.substring(0,10).split('-').reverse().join('-')} up to ${this.state.detailsList[station.code].max.substring(0,10).split('-').reverse().join('-')}`;
+              if (this.state.detailsList[station.code] && !this.state.detailsList[station.code].qc) {
+                message += ' (QC missing)';
+              }
             }
 
             return (
               <CircleMarker center={[station.location.latitude, station.location.longitude]} fillColor={color} color={"black"} weight={1} fillOpacity={1} radius={6}>
                 <Popup>
-                  <span>{`${station.code} ${station.location.name}: ${message}`}</span>
+                  <p>
+                    {`${station.code} ${station.location.name}`}
+                    <br />
+                    {`${message}`}
+                  </p>
                 </Popup>
               </CircleMarker>
             )
