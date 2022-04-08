@@ -45,7 +45,8 @@ export default class ExportCreate extends React.Component {
       description: '',
       multiSelect: false,
       minDate: new Date('1990-01-01'),
-      maxDate: new Date()
+      maxDate: new Date(),
+      timezone: 'UTC'
     };
   }
 
@@ -245,6 +246,22 @@ export default class ExportCreate extends React.Component {
                     </fieldset>
                   </Col>
                   }
+                </Row>
+                <Row className="border-bottom">
+                  <Col sm="3" className="d-flex mb-2 mt-3">
+                    {i18next.t('common.timezone')}
+                  </Col>
+                  <Col sm="3" className="d-flex mb-2 mt-2">
+                    <InputGroup>
+                      <InputGroupAddon type="prepend">
+                        <InputGroupText>TZ</InputGroupText>
+                      </InputGroupAddon>
+                      <FormSelect onChange={e => this.change("timezone", e.target.value)}>
+                        <option selected={(this.state.timezone == "UTC") ? "selected" : ""} value="UTC">{i18next.t('common.timezone_utc')}</option>
+                        <option selected={(this.state.timezone == "EAT") ? "selected" : ""} value="EAT">{i18next.t('common.timezone_eat')}</option>
+                      </FormSelect>
+                    </InputGroup>
+                  </Col>
                 </Row>
                 <Row>
                   <Col sm="3" className="d-flex mb-3 mt-3">
