@@ -34,6 +34,7 @@ export default class MapComponent extends React.Component {
 
     this.submit = this.submit.bind(this);
     this.updateStations = this.updateStations.bind(this);
+    this.updateVariables = this.updateVariables.bind(this);
     this.changeType = this.changeType.bind(this);
 
     this.state = {
@@ -42,11 +43,13 @@ export default class MapComponent extends React.Component {
         [-26.2891802,52.3832053]
       ],
       stationList: [],
+      variableList: [],
       valueList: {},
       detailsList: {},
       colorList: {},
       type: "",
       activeType: "",
+      activeUnit: "",
       valueActive: false,
       detailsActive: false
     };
@@ -57,6 +60,12 @@ export default class MapComponent extends React.Component {
     this.setState({ 'stationList': stationList });
   }
 
+  updateVariables() {
+    const accessVariableCodes = Store.getAccessVariableCodes();
+    const variableList = Store.getVariables().filter(function(variable){ return accessVariableCodes.indexOf(variable.shortcode) !== -1; });
+    this.setState({ 'variableList': variableList });
+  }
+
   changeType(value) {
     const newState = {};
     newState['type'] = value;
@@ -65,10 +74,12 @@ export default class MapComponent extends React.Component {
 
   componentWillMount() {
     Store.on(Constants.EVENT_STATIONS_READY, this.updateStations);
+    Store.on(Constants.EVENT_VARIABLES_READY, this.updateVariables);
   }
 
   componentWillUnmount() {
     Store.removeListener(Constants.EVENT_STATIONS_READY, this.updateStations);
+    Store.removeListener(Constants.EVENT_VARIABLES_READY, this.updateVariables);
   }
 
   componentDidMount() {
@@ -106,6 +117,7 @@ export default class MapComponent extends React.Component {
             this.setState(
               {
                 activeType: response.type,
+                activeUnit: response['variable'] ? this.state.variableList.find(v => v.shortcode == response['variable'])['units'] : "",
                 colorList: response.colors,
                 valueList: response.values,
                 detailsList: response.details,
@@ -195,13 +207,28 @@ export default class MapComponent extends React.Component {
           })}
           {this.state.valueActive && this.state.stationList.filter(s => this.state.valueList[s.code] !== undefined).map((station) => {
             const value = this.state.valueList[station.code];
-            const lightness = (100 - Math.min(100, (value / 3))).toFixed(0);
-            const color = `	hsl(240, 60%, ${lightness}%)`;
+
+            let lightness = (100 - Math.min(100, (value / 3))).toFixed(0);
+            let color = `	hsl(240, 60%, ${lightness}%)`;
+
+            if (this.state.activeType == 'pressuretrend') {
+              lightness = (100 - Math.min(100, (Math.abs(value) * 20))).toFixed(0);
+              if (value < 0) {
+                color = `	hsl(240, 60%, ${lightness}%)`;
+              } else {
+                color = `	hsl(0, 90%, ${lightness}%)`;
+              }
+            } else if (this.state.activeType == '7daytempmin' || this.state.activeType == '7daytempmax') {
+              const colorValue = (this.state.activeType == '7daytempmin') ? (value - 10) * 3 : (value - 20) * 3;
+
+              lightness = (100 - Math.min(100, colorValue)).toFixed(0);
+              color = `	hsl(0, 90%, ${lightness}%)`;
+            }
 
             return (
               <CircleMarker center={[station.location.latitude, station.location.longitude]} fillColor={color} color={"black"} weight={1} fillOpacity={1} radius={6}>
                 <Popup>
-                  <span>{`${station.code} ${station.location.name}: ${value.toFixed(1)}`}</span>
+                  <span>{`${station.code} ${station.location.name}: ${value.toFixed(1)} ${this.state.activeUnit}`}</span>
                 </Popup>
               </CircleMarker>
             )

@@ -14,6 +14,7 @@ def map():
     response = {}
     response['type'] = content['type']
     response['valueActive'] = False
+    response['variable'] = 0
     response['detailsActive'] = False
     response['details'] = {}
     response['values'] = {}
@@ -54,6 +55,7 @@ def map():
 
     elif content['type'] == "pressuretrend":
         response['valueActive'] = True
+        response['variable'] = 884
         endDate = datetime.now()
         startDate = endDate - timedelta(hours=124)
         observationStations = Observation.query.with_entities(Observation.recordedFrom, Observation.obsDatetime, Observation.obsValue)\
@@ -71,6 +73,7 @@ def map():
             response['values'][observationStation.recordedFrom] = observationEnd.obsValue - observationStart.obsValue
     elif content['type'] == "30dayprecipitation":
         response['valueActive'] = True
+        response['variable'] = 892
         endDate = datetime.now()
         startDate = endDate - timedelta(days=30)
         observations = Observation.query.with_entities(Observation.recordedFrom, func.sum(Observation.obsValue).label('total'), func.min(Observation.obsDatetime).label('first'), func.max(Observation.obsDatetime).label('last'))\
@@ -79,6 +82,7 @@ def map():
             response['values'][observation.recordedFrom] = observation.total
     elif content['type'] == "7daytempmin":
         response['valueActive'] = True
+        response['variable'] = 881
         endDate = datetime.now()
         startDate = endDate - timedelta(days=7)
         observations = Observation.query.with_entities(Observation.recordedFrom, func.min(Observation.obsValue).label('value'))\
@@ -87,6 +91,7 @@ def map():
             response['values'][observation.recordedFrom] = observation.value
     elif content['type'] == "7daytempmax":
         response['valueActive'] = True
+        response['variable'] = 881
         endDate = datetime.now()
         startDate = endDate - timedelta(days=7)
         observations = Observation.query.with_entities(Observation.recordedFrom, func.max(Observation.obsValue).label('value'))\
