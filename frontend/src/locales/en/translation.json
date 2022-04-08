@@ -40,7 +40,10 @@
     "disabled": "Disabled",
     "enabled": "Enabled",
     "show_all": "show all",
-    "specify_period": "Specify period"
+    "specify_period": "Specify period",
+    "timezone": "Timezone",
+    "timezone_utc": "UTC (Coordinated Universal Time)",
+    "timezone_eat": "EAT (East Africa Time) UTC+03:00"
   },
   "map": {
 
