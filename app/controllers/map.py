@@ -23,35 +23,51 @@ def map():
     if content['type'] == "availability":
         response['detailsActive'] = True
 
-        observations = Observation.query.with_entities(Observation.recordedFrom, func.min(Observation.obsDatetime).label('min'), func.max(Observation.obsDatetime).label('max')).group_by(Observation.recordedFrom).all()
+        observations = Observation.query.with_entities(Observation.recordedFrom, Observation.describedBy, func.min(Observation.obsDatetime).label('min'), func.max(Observation.obsDatetime).label('max')).group_by(Observation.recordedFrom, Observation.describedBy).all()
         for stationInfo in list(observations):
-            response['details'][stationInfo.recordedFrom] = {
+            if stationInfo.recordedFrom not in response['details'].keys():
+                response['details'][stationInfo.recordedFrom] = {
+                    'min': stationInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                    'max': stationInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                    'qc': True,
+                    'variables': {}
+                }
+
+            response['details'][stationInfo.recordedFrom]['variables'][stationInfo.describedBy] = {
                 'min': stationInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'max': stationInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                'qc': True
+                'max': stationInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ')
             }
 
-            timeDiff = datetime.now() - stationInfo.max
-            color = "#008000"
-            if timeDiff > timedelta(days=7):
-                color = "#FF0000"
-            elif timeDiff > timedelta(hours=24):
-                color = "#FFA500"
-            response['colors'][stationInfo.recordedFrom] = color
-
-        observationsInitial = ObservationInitial.query.with_entities(ObservationInitial.recordedFrom, func.min(ObservationInitial.obsDatetime).label('min'), func.max(ObservationInitial.obsDatetime).label('max')).group_by(ObservationInitial.recordedFrom).all()
+        observationsInitial = ObservationInitial.query.with_entities(ObservationInitial.recordedFrom, ObservationInitial.describedBy, func.min(ObservationInitial.obsDatetime).label('min'), func.max(ObservationInitial.obsDatetime).label('max')).group_by(ObservationInitial.recordedFrom, ObservationInitial.describedBy).all()
         for obsInitialInfo in list(observationsInitial):
             if obsInitialInfo.recordedFrom not in response['details'].keys():
                 response['details'][obsInitialInfo.recordedFrom] = {
                     'min': obsInitialInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
                     'max': obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                    'qc': False
+                    'qc': False,
+                    'variables': {}
                 }
-                response['colors'][obsInitialInfo.recordedFrom] = "#FF0000"
-            elif obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ') > response['details'][obsInitialInfo.recordedFrom]['max']:
-                response['details'][obsInitialInfo.recordedFrom]['max'] = obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ')
-                response['details'][obsInitialInfo.recordedFrom]['qc'] = False
-                response['colors'][obsInitialInfo.recordedFrom] = "#FF0000"
+
+            if obsInitialInfo.describedBy not in response['details'][obsInitialInfo.recordedFrom]['variables'].keys():
+                response['details'][obsInitialInfo.recordedFrom]['variables'][obsInitialInfo.describedBy] = {
+                    'min': obsInitialInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                    'max': obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ')
+                }
+
+        for stationCode in response['details'].keys():
+            for variableCode in response['details'][stationCode]['variables'].keys():
+                if response['details'][stationCode]['variables'][variableCode]['min'] < response['details'][stationCode]['min']:
+                    response['details'][stationCode]['min'] = response['details'][stationCode]['variables'][variableCode]['min']
+                if response['details'][stationCode]['variables'][variableCode]['max'] > response['details'][stationCode]['max']:
+                    response['details'][stationCode]['max'] = response['details'][stationCode]['variables'][variableCode]['max']
+
+            timeDiff = datetime.now() - datetime.strptime(response['details'][stationCode]['max'], "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=None)
+            color = "#008000"
+            if timeDiff > timedelta(days=7):
+                color = "#FF0000"
+            elif timeDiff > timedelta(hours=24):
+                color = "#FFA500"
+            response['colors'][stationCode] = color
 
     elif content['type'] == "pressuretrend":
         response['valueActive'] = True
