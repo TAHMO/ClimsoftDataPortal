@@ -10,9 +10,11 @@ general_api = Blueprint('general_api', __name__)
 @login_required
 def station_list():
     stations = db.query(Station).order_by(Station.stationId.asc()).all()
-    variables = db.query(Variable).filter(Variable.elementtype.like("%AWS%") | Variable.elementtype.like("%hourly%")).order_by(Variable.elementName.asc()).all()
 
     standard_variables = [
+        2,      # Daily max
+        3,      # Daily min
+        5,      # Daily precip
         881,    # Temp
         884,    # Pressure
         893,    # RH
@@ -28,6 +30,8 @@ def station_list():
         916,    # Vapour pressure
         915,    # Soil moisture
     ]
+
+    variables = db.query(Variable).filter(Variable.elementId.in_(standard_variables + other_variables)).order_by(Variable.elementName.asc()).all()
 
     response = {
         'stations': [

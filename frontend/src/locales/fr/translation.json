@@ -41,7 +41,7 @@
     "enabled": "Actif",
     "show_all": "montrer tout",
     "specify_period": "Préciser la période",
-    "timezone": "Timezone",
+    "timezone": "Fuseau horaire",
     "timezone_utc": "UTC (Coordinated Universal Time)",
     "timezone_eat": "EAT (East Africa Time) UTC+03:00"
   },

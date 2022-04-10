@@ -186,11 +186,9 @@ export default class MapComponent extends React.Component {
           {this.state.detailsActive && this.state.stationList.map((station) => {
             let message = ``;
             const color = (this.state.colorList[station.code]) ? this.state.colorList[station.code] : 'lightgray';
-            if (this.state.activeType == 'availability') {
-              message = (!this.state.detailsList[station.code]) ? 'No data' : `${this.state.detailsList[station.code].min.substring(0,10).split('-').reverse().join('-')} up to ${this.state.detailsList[station.code].max.substring(0,10).split('-').reverse().join('-')}`;
-              if (this.state.detailsList[station.code] && !this.state.detailsList[station.code].qc) {
-                message += ' (QC missing)';
-              }
+            message = (!this.state.detailsList[station.code]) ? 'No data' : `${this.state.detailsList[station.code].min.substring(0,10).split('-').reverse().join('-')} up to ${this.state.detailsList[station.code].max.substring(0,10).split('-').reverse().join('-')}`;
+            if (this.state.detailsList[station.code] && !this.state.detailsList[station.code].qc) {
+              message += ' (QC missing)';
             }
 
             return (
@@ -200,7 +198,16 @@ export default class MapComponent extends React.Component {
                     {`${station.code} ${station.location.name}`}
                     <br />
                     {`${message}`}
+                    <br />
                   </p>
+                  {this.state.detailsList[station.code] && Object.keys(this.state.detailsList[station.code].variables).map((variable) => {
+                    const variableInfo = this.state.variableList.find(v => v.shortcode == variable);
+                    if (variableInfo) {
+                      return (
+                        <p>{variableInfo['description']}: {this.state.detailsList[station.code]['variables'][variable].min.substring(0,10).split('-').reverse().join('-')} up to {this.state.detailsList[station.code]['variables'][variable].max.substring(0,10).split('-').reverse().join('-')}</p>
+                      )
+                    }
+                  })}
                 </Popup>
               </CircleMarker>
             )
