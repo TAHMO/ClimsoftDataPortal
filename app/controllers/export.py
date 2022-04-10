@@ -19,6 +19,7 @@ export_schema = {
         "description": {"type": "string"},
         "startDate": {"type": "string"},
         "endDate": {"type": "string"},
+        "timezone": {"type": "string"},
         "stations": {
             "type": "array",
             "items": {
@@ -32,7 +33,7 @@ export_schema = {
             }
         }
     },
-    "minProperties": 5,
+    "minProperties": 6,
     "additionalProperties": False
 }
 
@@ -51,6 +52,7 @@ def create():
         startDate=startDate,
         endDate=endDate,
         description=content['description'],
+        timezone=content['timezone'],
         variables=[ExportVariable(variable_id=int(x)) for x in content['variables']],
         stations=[ExportStation(station_id=x) for x in content['stations']]
     )
@@ -94,6 +96,7 @@ def download(id):
 
     stations = Station.query.filter(Station.stationId.in_([ s.station_id for s in export.stations])).all()
     variables = Variable.query.filter(Variable.elementId.in_([ v.variable_id for v in export.variables])).all()
+    timestamp_column = 'Timestamp {}'.format(export.timezone)
 
     # Start ZIP archive in memory.
     in_memory = BytesIO()
@@ -107,8 +110,10 @@ def download(id):
                 .filter(Observation.describedBy == variable.elementId).order_by(Observation.obsDatetime.asc()).all()
 
             if len(observations):
-                dataframes.append(pd.DataFrame.from_records(observations, index='Timestamp', columns=['Timestamp','{} ({})'.format(variable.abbreviation, variable.units)]))
-
+                df = pd.DataFrame.from_records(observations, index=timestamp_column, columns=[timestamp_column,'{} ({})'.format(variable.abbreviation, variable.units)])
+                if export.timezone != 'UTC':
+                    df = df.tz_localize('UTC').tz_convert('Africa/Nairobi')
+                dataframes.append(df)
 
         if len(dataframes):
             zf.writestr('{}_{}.csv'.format(station.stationId, "".join(c for c in station.stationName if c.isalnum()).rstrip()),

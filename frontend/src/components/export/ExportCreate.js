@@ -135,6 +135,7 @@ export default class ExportCreate extends React.Component {
       exportConfig.startDate = dateRangeReference.state.startDate.getFullYear() + "-" + ("0"+(dateRangeReference.state.startDate.getMonth()+1)).slice(-2) + "-" + ("0" + dateRangeReference.state.startDate.getDate()).slice(-2) + 'T00:00:00.000Z';
       exportConfig.endDate = dateRangeReference.state.endDate.getFullYear() + "-" + ("0"+(dateRangeReference.state.endDate.getMonth()+1)).slice(-2) + "-" + ("0" + dateRangeReference.state.endDate.getDate()).slice(-2) + 'T23:59:59.000Z';
       exportConfig.description = this.state.description;
+      exportConfig.timezone = this.state.timezone;
 
       axios(
         {
@@ -258,7 +259,7 @@ export default class ExportCreate extends React.Component {
                       </InputGroupAddon>
                       <FormSelect onChange={e => this.change("timezone", e.target.value)}>
                         <option selected={(this.state.timezone == "UTC") ? "selected" : ""} value="UTC">{i18next.t('common.timezone_utc')}</option>
-                        <option selected={(this.state.timezone == "EAT") ? "selected" : ""} value="EAT">{i18next.t('common.timezone_eat')}</option>
+                        <option selected={(this.state.timezone == "Africa/Nairobi") ? "selected" : ""} value="Africa/Nairobi">{i18next.t('common.timezone_eat')}</option>
                       </FormSelect>
                     </InputGroup>
                   </Col>

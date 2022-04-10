@@ -24,7 +24,7 @@ class Export(Base):
     startDate = Column(DateTime())
     endDate = Column(DateTime())
     description = Column(Text)
-    timezone = Column(String(5))
+    timezone = Column(String(255))
 
     stations = relationship('ExportStation', cascade="all, delete-orphan")
     variables = relationship('ExportVariable', cascade="all, delete-orphan")

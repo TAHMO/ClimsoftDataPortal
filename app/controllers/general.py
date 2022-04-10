@@ -20,7 +20,7 @@ def station_list():
         893,    # RH
         892,    # Precipitation
         895,    # Wind direction
-        879     # Wind speed
+        897     # Wind speed
     ]
 
     other_variables = [
