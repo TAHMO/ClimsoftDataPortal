@@ -72,7 +72,7 @@ export default class GraphConfiguration extends React.Component {
       graphTitle: '',
       graphUnits: '',
       graphType: 'scatter',
-      timezone: 'EAT'
+      timezone: 'Africa/Nairobi'
     };
   }
 
@@ -129,7 +129,8 @@ export default class GraphConfiguration extends React.Component {
       'period': this.state.period,
       'startDate': null,
       'endDate': null,
-      'aggregation': aggregationByType[this.state.type]
+      'aggregation': aggregationByType[this.state.type],
+      'timezone': this.state.timezone
     };
 
     // Validation.
@@ -320,7 +321,7 @@ export default class GraphConfiguration extends React.Component {
                           </InputGroupAddon>
                           <FormSelect onChange={e => this.change("timezone", e.target.value)}>
                             <option selected={(this.state.timezone == "UTC") ? "selected" : ""} value="UTC">{i18next.t('common.timezone_utc')}</option>
-                            <option selected={(this.state.timezone == "EAT") ? "selected" : ""} value="EAT">{i18next.t('common.timezone_eat')}</option>
+                            <option selected={(this.state.timezone == "Africa/Nairobi") ? "selected" : ""} value="Africa/Nairobi">{i18next.t('common.timezone_eat')}</option>
                           </FormSelect>
                         </InputGroup>
                       </Col>

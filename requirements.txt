@@ -8,3 +8,4 @@ email_validator
 bcrypt
 pandas
 waitress
+pytz

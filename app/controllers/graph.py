@@ -3,6 +3,7 @@ from flask_security import login_required
 from app.models import db
 from app.models.observation import Observation
 from datetime import datetime, timedelta
+import pytz
 
 graph_api = Blueprint('graph_api', __name__)
 
@@ -27,10 +28,12 @@ def graph():
             observations = Observation.query.filter(Observation.recordedFrom == station).filter(Observation.obsDatetime >= startDate).filter(Observation.obsDatetime <= endDate).filter(
                 Observation.describedBy == content['variable']).order_by(Observation.obsDatetime.asc()).all()
 
+            tz_adjust = pytz.timezone(content['timezone']).utcoffset(startDate).total_seconds() if content['timezone'] != "UTC" and len(observations) else 0
+
             response.append(
                 {
                     "station": station,
-                    "timestamps": [ observation.obsDatetime.strftime('%Y-%m-%dT%H:%M:%SZ') for observation in observations ],
+                    "timestamps": [ (observation.obsDatetime + timedelta(0,tz_adjust)).strftime('%Y-%m-%dT%H:%M:%SZ') for observation in observations ],
                     "values": [ observation.obsValue for observation in observations ]
                 }
             )
