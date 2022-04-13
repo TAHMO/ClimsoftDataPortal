@@ -140,27 +140,27 @@ export default class MapComponent extends React.Component {
       <div>
         <div style={{marginLeft: "24px"}}>
           <Row noGutters className="page-header py-4">
-            <PageTitle sm="4" title={`Map configuration`} subtitle="" className="text-sm-left"/>
+            <PageTitle sm="4" title={i18next.t('map.settings_page_title')} subtitle="" className="text-sm-left"/>
           </Row>
           <Row noGutters>
             <Col sm="3" className="d-flex mb-2 mt-2">
               <InputGroup>
                 <InputGroupAddon type="prepend">
-                  <InputGroupText>{i18next.t('common.variable')}</InputGroupText>
+                  <InputGroupText>{i18next.t('map.layer')}</InputGroupText>
                 </InputGroupAddon>
                 <FormSelect onChange={e => this.changeType(e.target.value)}>
-                  <option value={""} >Station locations</option>
-                  <option value={"availability"} >Data availability</option>
-                  <option value={"pressuretrend"}>Pressure trend (24 hour)</option>
-                  <option value={"30dayprecipitation"}>Precipitation cumulative (30 day)</option>
-                  <option value={"7daytempmin"}>Minimum temperature (7 day)</option>
-                  <option value={"7daytempmax"}>Maximum temperature (7 day)</option>
+                  <option value={""} >{i18next.t('map.layer_locations')}</option>
+                  <option value={"availability"} >{i18next.t('map.layer_availability')}</option>
+                  <option value={"pressuretrend"}>{i18next.t('map.layer_pressuretrend')}</option>
+                  <option value={"30dayprecipitation"}>{i18next.t('map.layer_30dayprecipitation')}</option>
+                  <option value={"7daytempmin"}>{i18next.t('map.layer_7daytempmin')}</option>
+                  <option value={"7daytempmax"}>{i18next.t('map.layer_7daytempmax')}</option>
                 </FormSelect>
               </InputGroup>
             </Col>
             <Col sm="3" className="d-flex ml-2">
               <Button theme="primary" onClick={this.submit} className="mt-2 mb-2 mr-1">
-                Update map
+                {i18next.t('map.update')}
               </Button>
             </Col>
           </Row>
@@ -186,9 +186,9 @@ export default class MapComponent extends React.Component {
           {this.state.detailsActive && this.state.stationList.map((station) => {
             let message = ``;
             const color = (this.state.colorList[station.code]) ? this.state.colorList[station.code] : 'lightgray';
-            message = (!this.state.detailsList[station.code]) ? 'No data' : `${this.state.detailsList[station.code].min.substring(0,10).split('-').reverse().join('-')} up to ${this.state.detailsList[station.code].max.substring(0,10).split('-').reverse().join('-')}`;
+            message = (!this.state.detailsList[station.code]) ? i18next.t('map.no_data') : `${this.state.detailsList[station.code].min.substring(0,10).split('-').reverse().join('-')} ${i18next.t('map.up_to')} ${this.state.detailsList[station.code].max.substring(0,10).split('-').reverse().join('-')}`;
             if (this.state.detailsList[station.code] && !this.state.detailsList[station.code].qc) {
-              message += ' (QC missing)';
+              message += i18next.t('map.qc_missing');
             }
 
             return (
@@ -204,7 +204,7 @@ export default class MapComponent extends React.Component {
                     const variableInfo = this.state.variableList.find(v => v.shortcode == variable);
                     if (variableInfo) {
                       return (
-                        <p>{variableInfo['description']}: {this.state.detailsList[station.code]['variables'][variable].min.substring(0,10).split('-').reverse().join('-')} up to {this.state.detailsList[station.code]['variables'][variable].max.substring(0,10).split('-').reverse().join('-')}</p>
+                        <p>{variableInfo['description']}: {this.state.detailsList[station.code]['variables'][variable].min.substring(0,10).split('-').reverse().join('-')} {i18next.t('map.up_to')} {this.state.detailsList[station.code]['variables'][variable].max.substring(0,10).split('-').reverse().join('-')}</p>
                       )
                     }
                   })}

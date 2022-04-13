@@ -46,7 +46,18 @@
     "timezone_eat": "EAT (East Africa Time) UTC+03:00"
   },
   "map": {
-
+    "settings_page_title": "Configuration de la carte",
+    "layer": "Couche ",
+    "layer_locations": "Emplacement des stations",
+    "layer_availability": "Disponibilité des données",
+    "layer_pressuretrend": "Tendance de la pression",
+    "layer_30dayprecipitation": "Précipitations cumulées (30 jours)",
+    "layer_7daytempmin": "Température minimale (7 jours)",
+    "layer_7daytempmax": "Température maximale (7 jours)",
+    "update": "Mise à jour de la carte",
+    "no_data": "Pas de données",
+    "qc_missing": " (CQ manquant)",
+    "up_to": "jusqu'à"
   },
   "visualize": {
     "settings_page_title": "Configurer le graphique",
