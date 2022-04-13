@@ -86,7 +86,8 @@ def map():
                 .filter(Observation.obsDatetime >= startDate).filter((Observation.describedBy == 884) | (Observation.describedBy == 890) | (Observation.describedBy == 891))\
                 .filter(Observation.recordedFrom == observationStation.recordedFrom).order_by(Observation.obsDatetime.desc()).first()
 
-            response['values'][observationStation.recordedFrom] = observationEnd.obsValue - observationStart.obsValue
+            if observationEnd.obsValue and observationStart.obsValue:
+                response['values'][observationStation.recordedFrom] = observationEnd.obsValue - observationStart.obsValue
     elif content['type'] == "30dayprecipitation":
         response['valueActive'] = True
         response['variable'] = 892
