@@ -26,7 +26,7 @@ def station_list():
     other_variables = [
         886,    # Gust speed
         894,    # Solar rad
-        891,    # MSL pressure
+        890,    # MSL pressure
         916,    # Vapour pressure
         915,    # Soil moisture
     ]
@@ -76,7 +76,7 @@ def station_list():
             }
         },
         'stationAccess': [ station.stationId for station in stations ] if current_user.access_stations_all else list(map(lambda x: x.station_id, current_user.access_stations_specific)),
-        'variableAccess': [ variable.elementId for variable in variables ] if current_user.access_variables_all else  list(map(lambda x: x.variable_id, current_user.access_variable_specific))
+        'variableAccess': [ variable.elementId for variable in variables ] if current_user.access_variables_all else [ variable.elementId for variable in variables if variable.elementId in standard_variables ] if current_user.access_variables_standard else list(map(lambda x: x.variable_id, current_user.access_variable_specific))
     }
 
     return jsonify(response)

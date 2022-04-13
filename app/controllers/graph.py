@@ -26,7 +26,7 @@ def graph():
     if content['stations']:
         for station in content['stations']:
             observations = Observation.query.filter(Observation.recordedFrom == station).filter(Observation.obsDatetime >= startDate).filter(Observation.obsDatetime <= endDate).filter(
-                Observation.describedBy == content['variable']).order_by(Observation.obsDatetime.asc()).all()
+                Observation.describedBy == content['variable']).filter(Observation.obsValue != -999).order_by(Observation.obsDatetime.asc()).all()
 
             tz_adjust = pytz.timezone(content['timezone']).utcoffset(startDate).total_seconds() if content['timezone'] != "UTC" and len(observations) else 0
 

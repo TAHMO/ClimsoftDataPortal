@@ -107,7 +107,7 @@ def download(id):
         for variable in variables:
             observations = Observation.query.with_entities(Observation.obsDatetime, Observation.obsValue).filter(Observation.recordedFrom == station.stationId)\
                 .filter(Observation.obsDatetime >= export.startDate).filter(Observation.obsDatetime <= export.endDate)\
-                .filter(Observation.describedBy == variable.elementId).order_by(Observation.obsDatetime.asc()).all()
+                .filter(Observation.describedBy == variable.elementId).filter(Observation.obsValue != -999).order_by(Observation.obsDatetime.asc()).all()
 
             if len(observations):
                 df = pd.DataFrame.from_records(observations, index=timestamp_column, columns=[timestamp_column,'{} ({})'.format(variable.abbreviation, variable.units)])
