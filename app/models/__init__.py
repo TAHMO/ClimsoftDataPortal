@@ -8,7 +8,7 @@ from app.models.user import User, Role
 from dotenv import load_dotenv
 
 load_dotenv()
-engine = create_engine('mysql+pymysql://{0}'.format(os.environ.get("DATABASE_URI")))
+engine = create_engine('mysql+pymysql://{0}'.format(os.environ.get("DATABASE_URI")), pool_recycle=3600, pool_pre_ping=True)
 
 from app.models import station
 from app.models import variable
