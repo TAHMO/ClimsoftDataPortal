@@ -7,7 +7,7 @@ class Station(Base):
     stationName = Column(String)
     latitude = Column(Float)
     longitude = Column(Float)
-    elevation = Column(Float)
+    elevation = Column(String)
 
     def __str__(self):
         return "{}".format(self.stationName)

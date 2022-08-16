@@ -37,7 +37,7 @@ export default class GraphConfiguration extends React.Component {
     this.updateAccess = this.updateAccess.bind(this);
 
     const graphTypeLabels = {
-      'hourly-line': 'Line graph (1 hour values)',
+      'hourly-line': 'Line graph',
       'daily-line': 'Line graph (daily values)',
       'hourly-bar': 'Bar graph (hourly values)',
       'daily-bar': 'Bar graph (daily values)',

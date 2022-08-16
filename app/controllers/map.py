@@ -49,10 +49,11 @@ def map():
                 }
 
             if obsInitialInfo.describedBy not in response['details'][obsInitialInfo.recordedFrom]['variables'].keys():
-                response['details'][obsInitialInfo.recordedFrom]['variables'][obsInitialInfo.describedBy] = {
-                    'min': obsInitialInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
-                    'max': obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ')
-                }
+                if isinstance(obsInitialInfo.min, datetime) and isinstance(obsInitialInfo.max, datetime):
+                    response['details'][obsInitialInfo.recordedFrom]['variables'][obsInitialInfo.describedBy] = {
+                        'min': obsInitialInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
+                        'max': obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ')
+                    }
 
         for stationCode in response['details'].keys():
             for variableCode in response['details'][stationCode]['variables'].keys():
@@ -73,7 +74,7 @@ def map():
         response['valueActive'] = True
         response['variable'] = 884
         endDate = datetime.now()
-        startDate = endDate - timedelta(hours=124)
+        startDate = endDate - timedelta(hours=24)
         observationStations = Observation.query.with_entities(Observation.recordedFrom, Observation.obsDatetime, Observation.obsValue)\
             .filter(Observation.obsDatetime >= startDate).filter((Observation.describedBy == 884) | (Observation.describedBy == 890) | (Observation.describedBy == 891))\
             .group_by(Observation.recordedFrom).all()
