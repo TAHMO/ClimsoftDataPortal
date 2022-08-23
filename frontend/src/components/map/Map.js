@@ -219,11 +219,11 @@ export default class MapComponent extends React.Component {
             let color = `	hsl(240, 60%, ${lightness}%)`;
 
             if (this.state.activeType == 'pressuretrend') {
-              lightness = Math.min(100, (Math.abs(value) * 20)).toFixed(0);
+              lightness = (100 - Math.min(100, (Math.abs(value) * 20))).toFixed(0);
               if (value < 0) {
-                color = `	hsl(240, 60%, ${lightness}%)`;
-              } else {
                 color = `	hsl(0, 90%, ${lightness}%)`;
+              } else {
+                color = `	hsl(240, 60%, ${lightness}%)`;
               }
             } else if (this.state.activeType == '7daytempmin' || this.state.activeType == '7daytempmax') {
               const colorValue = (this.state.activeType == '7daytempmin') ? (value - 10) * 3 : (value - 20) * 3;
