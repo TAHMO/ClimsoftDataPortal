@@ -178,7 +178,11 @@ export default class MapComponent extends React.Component {
             return (
               <Marker position={[station.location.latitude, station.location.longitude]}>
                 <Popup>
-                  <span>{`${station.code} ${station.location.name}`}</span>
+                  <p>
+                    {`${station.code} ${station.location.name}`}
+                    <br />
+                    {`Latitude: ${station.location.lat}, Longitude: ${station.location.lng}`}
+                  </p>
                 </Popup>
               </Marker>
             )
