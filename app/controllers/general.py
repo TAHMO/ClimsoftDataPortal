@@ -29,6 +29,7 @@ def station_list():
         890,    # MSL pressure
         916,    # Vapour pressure
         915,    # Soil moisture
+        701     # Daily discharge
     ]
 
     variables = db.query(Variable).filter(Variable.elementId.in_(standard_variables + other_variables)).order_by(Variable.elementName.asc()).all()
