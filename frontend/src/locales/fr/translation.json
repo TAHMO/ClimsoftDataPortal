@@ -43,7 +43,10 @@
     "specify_period": "Préciser la période",
     "timezone": "Fuseau horaire",
     "timezone_utc": "UTC (Coordinated Universal Time)",
-    "timezone_eat": "EAT (East Africa Time) UTC+03:00"
+    "timezone_eat": "EAT (East Africa Time) UTC+03:00",
+    "type": "Type",
+    "type_meteo": "Meteo",
+    "type_hydro": "Hydro"
   },
   "map": {
     "settings_page_title": "Configuration de la carte",

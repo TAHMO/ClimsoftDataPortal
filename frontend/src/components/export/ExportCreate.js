@@ -46,7 +46,8 @@ export default class ExportCreate extends React.Component {
       multiSelect: false,
       minDate: new Date('1990-01-01'),
       maxDate: new Date(),
-      timezone: 'UTC'
+      timezone: 'UTC',
+      filterType: 'meteo'
     };
   }
 
@@ -295,6 +296,17 @@ export default class ExportCreate extends React.Component {
                       <FormInput onChange={e => this.change("filterString", e.target.value.toLowerCase())} placeholder={i18next.t('common.filter_description')} />
                     </InputGroup>
                   </Col>
+                  <Col sm="2" className="d-flex mb-2 mt-3">
+                    <InputGroup className="mb-3">
+                      <InputGroupAddon type="prepend">
+                        <InputGroupText>{i18next.t('common.type')}</InputGroupText>
+                      </InputGroupAddon>
+                      <FormSelect onChange={e => this.change("filterType", e.target.value)}>
+                        <option value={"meteo"}>{i18next.t('common.type_meteo')}</option>
+                        <option value={"hydro"}>{i18next.t('common.type_hydro')}</option>
+                      </FormSelect>
+                    </InputGroup>
+                  </Col>
                 </Row>
                 <table className="table mb-0">
                   <thead className="bg-light">
@@ -317,7 +329,7 @@ export default class ExportCreate extends React.Component {
                   </tr>
                   </thead>
                   <tbody>
-                  {this.state.stationList.filter(e => ((e.location.name.toLowerCase().includes(this.state.filterString) || e.code.toLowerCase().includes(this.state.filterString)))).map((station) => {
+                  {this.state.stationList.filter(e => ((e.location.name.toLowerCase().includes(this.state.filterString) || e.code.toLowerCase().includes(this.state.filterString)) && ((this.state.filterType === 'meteo' && e.meteo) || (this.state.filterType === 'hydro' && e.hydro)))).map((station) => {
                     return (
                     <tr>
                       <td><FormCheckbox className="mb-0" checked={this.state.stations[station.code]} onChange={e => this.handleStationChange(e, station.code)}/></td>
