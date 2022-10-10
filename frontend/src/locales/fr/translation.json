@@ -48,7 +48,8 @@
   "map": {
     "settings_page_title": "Configuration de la carte",
     "layer": "Couche ",
-    "layer_locations": "Emplacement des stations",
+    "layer_locations": "Emplacement des stations meteo",
+    "layer_locations_hydro": "Emplacement des stations hydro",
     "layer_availability": "Disponibilité des données",
     "layer_pressuretrend": "Tendance de la pression",
     "layer_30dayprecipitation": "Précipitations cumulées (30 jours)",

@@ -42,7 +42,9 @@ def station_list():
                     'longitude': station.longitude,
                     'elevationmsl': station.elevation,
                     'name': station.stationName
-                }
+                },
+                'meteo': True if station.drainageBasin else False,
+                'hydro': False if station.drainageBasin else True
             } for station in list(filter(lambda s: s.latitude and s.longitude, stations))
         ],
         'variables': [

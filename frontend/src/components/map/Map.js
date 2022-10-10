@@ -95,7 +95,10 @@ export default class MapComponent extends React.Component {
       'type': this.state.type
     };
 
-    if (errors.length > 0) {
+    if (mapConfig.type === '' || mapConfig.type === 'hydro') {
+      //  No request required.
+      this.setState({ activeType: mapConfig.type, valueActive: false, detailsActive: false });
+    } else if (errors.length > 0) {
       alert('Map update failed:\n' + errors.join('\n'));
       return false;
     } else {
@@ -150,6 +153,7 @@ export default class MapComponent extends React.Component {
                 </InputGroupAddon>
                 <FormSelect onChange={e => this.changeType(e.target.value)}>
                   <option value={""} >{i18next.t('map.layer_locations')}</option>
+                  <option value={"hydro"} >{i18next.t('map.layer_locations_hydro')}</option>
                   <option value={"availability"} >{i18next.t('map.layer_availability')}</option>
                   <option value={"pressuretrend"}>{i18next.t('map.layer_pressuretrend')}</option>
                   <option value={"30dayprecipitation"}>{i18next.t('map.layer_30dayprecipitation')}</option>
@@ -175,19 +179,26 @@ export default class MapComponent extends React.Component {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {!this.state.valueActive && !this.state.detailsActive && this.state.stationList.map((station) => {
-            return (
-              <Marker position={[station.location.latitude, station.location.longitude]}>
-                <Popup>
-                  <p>
-                    {`${station.code} ${station.location.name}`}
-                    <br />
-                    {`Latitude: ${station.location.lat}, Longitude: ${station.location.lng}`}
-                  </p>
-                </Popup>
-              </Marker>
-            )
+            if ((!this.state.activeType && station.meteo) || (this.state.activeType === 'hydro' && station.hydro)) {
+              return (
+                <Marker
+                  position={[station.location.latitude, station.location.longitude]}>
+                  <Popup>
+                    <p>
+                      {`${station.code} ${station.location.name}`}
+                      <br/>
+                      {`Latitude: ${station.location.latitude}, Longitude: ${station.location.longitude}`}
+                    </p>
+                  </Popup>
+                </Marker>
+              )
+            }
           })}
           {this.state.detailsActive && this.state.stationList.map((station) => {
+            if (!station.meteo) {
+              return;
+            }
+
             let message = ``;
             const color = (this.state.colorList[station.code]) ? this.state.colorList[station.code] : 'lightgray';
             message = (!this.state.detailsList[station.code]) ? i18next.t('map.no_data') : `${this.state.detailsList[station.code].min.substring(0,10).split('-').reverse().join('-')} ${i18next.t('map.up_to')} ${this.state.detailsList[station.code].max.substring(0,10).split('-').reverse().join('-')}`;

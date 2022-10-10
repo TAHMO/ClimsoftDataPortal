@@ -8,6 +8,7 @@ class Station(Base):
     latitude = Column(Float)
     longitude = Column(Float)
     elevation = Column(String)
+    drainageBasin = Column(String)
 
     def __str__(self):
         return "{}".format(self.stationName)

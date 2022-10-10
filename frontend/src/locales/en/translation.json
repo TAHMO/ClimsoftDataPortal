@@ -48,7 +48,8 @@
   "map": {
     "settings_page_title": "Map configuration",
     "layer": "Layer",
-    "layer_locations": "Station locations",
+    "layer_locations": "Weather station locations",
+    "layer_locations_hydro": "Hydro station locations",
     "layer_availability": "Data availability",
     "layer_pressuretrend": "Pressure trend",
     "layer_30dayprecipitation": "Precipitation cumulative (30 day)",
