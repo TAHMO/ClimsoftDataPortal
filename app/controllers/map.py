@@ -40,7 +40,7 @@ def map():
 
         observationsInitial = ObservationInitial.query.with_entities(ObservationInitial.recordedFrom, ObservationInitial.describedBy, func.min(ObservationInitial.obsDatetime).label('min'), func.max(ObservationInitial.obsDatetime).label('max')).group_by(ObservationInitial.recordedFrom, ObservationInitial.describedBy).all()
         for obsInitialInfo in list(observationsInitial):
-            if obsInitialInfo.recordedFrom not in response['details'].keys():
+            if obsInitialInfo.recordedFrom not in response['details'].keys() and isinstance(obsInitialInfo.min, datetime) and isinstance(obsInitialInfo.max, datetime):
                 response['details'][obsInitialInfo.recordedFrom] = {
                     'min': obsInitialInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),
                     'max': obsInitialInfo.max.strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -48,7 +48,7 @@ def map():
                     'variables': {}
                 }
 
-            if obsInitialInfo.describedBy not in response['details'][obsInitialInfo.recordedFrom]['variables'].keys():
+            if obsInitialInfo.recordedFrom in response['details'].keys() and obsInitialInfo.describedBy not in response['details'][obsInitialInfo.recordedFrom]['variables'].keys():
                 if isinstance(obsInitialInfo.min, datetime) and isinstance(obsInitialInfo.max, datetime):
                     response['details'][obsInitialInfo.recordedFrom]['variables'][obsInitialInfo.describedBy] = {
                         'min': obsInitialInfo.min.strftime('%Y-%m-%dT%H:%M:%SZ'),

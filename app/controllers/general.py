@@ -12,8 +12,8 @@ def station_list():
     stations = db.query(Station).order_by(Station.stationId.asc()).all()
 
     standard_variables = [
-        2,      # Daily max
-        3,      # Daily min
+        2,      # Daily max T
+        3,      # Daily min T
         5,      # Daily precip
         881,    # Temp
         884,    # Pressure
@@ -44,8 +44,8 @@ def station_list():
                     'elevationmsl': station.elevation,
                     'name': station.stationName
                 },
-                'meteo': True if station.drainageBasin else False,
-                'hydro': False if station.drainageBasin else True
+                'meteo': False if station.drainageBasin else True,
+                'hydro': True if station.drainageBasin else False
             } for station in list(filter(lambda s: s.latitude and s.longitude, stations))
         ],
         'variables': [
